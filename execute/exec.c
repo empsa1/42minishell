@@ -6,23 +6,30 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/08 17:10:06 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/08 17:31:39 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int exec(char *str)
+#include "../includes/minishell.h"
+
+int exec(char **str)
 {
-    int pid = fork();
+    int pid;
+    
+    pid = fork();
+    if (pid == -1)
+        return (-1);
     if (pid == 0)
     {
-        execve("");
+        execve(str[0], str, NULL);
     }
+    return (0);
 }
 
-void test()
+int main()
 {
-    char *str;
-    
-    str = "/usr/bin/ls -a"
+    char **str;
+
+    str = ft_split("/usr/bin/ls -l", ' ');
     exec(str);
 }
