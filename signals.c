@@ -9,7 +9,7 @@ void sigint_handler(int signal)
 
 int arm_signals()
 {
-    printf("TESTE\n");
+    //changesgsgseges
     signal(SIGINT, sigint_handler);
     return (0);
 }
