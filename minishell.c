@@ -16,8 +16,6 @@ void init(t_data *data, char **envp)
 
 int main(int ac, char **av, char **envp)
 {
-
-    //changegesagjebsgabdhjlb
     (void)av;
     if (ac != 1)
         return(print_error("Error: Too many arguments\n"));
@@ -31,12 +29,8 @@ int main(int ac, char **av, char **envp)
         printf("%s\n", line);
         if (*line)
             add_history(line);
-        check_line(line);
-        if (!ft_strncmp(line, "<<", 2))
-        {
-            while (strncmp(heredoc, "EOF", 3))
-                heredoc = readline("heredoc>");
-        }
+        parsing(line);
+        exec(line);
         free(line);
     }
 }
