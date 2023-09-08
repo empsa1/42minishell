@@ -9,6 +9,7 @@ void sigint_handler(int signal)
 
 int arm_signals()
 {
+    //fsdafasdasffa
     //changesgsgseges
     signal(SIGINT, sigint_handler);
     return (0);
