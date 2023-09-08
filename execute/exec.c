@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/08 16:12:34 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/08 16:54:42 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@ int exec(char *str)
     int pid = fork();
     if (pid == 0)
     {
-        execve()
+        execve("ERASPDJOASD");
     }
 }
 
