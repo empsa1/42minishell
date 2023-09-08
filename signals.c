@@ -2,9 +2,8 @@
 
 void sigint_handler(int signal)
 {
-    printf("wtf\n");
     if (signal)
-        system("./minishell");
+        exit(0);
 }
 
 int arm_signals()

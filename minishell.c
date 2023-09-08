@@ -17,24 +17,29 @@ void init(t_data *data, char **envp)
 int main(int ac, char **av, char **envp)
 {
     // HIST_ENTRY **history_list;
-    int pid;
 
-    arm_signals();
     (void)av;
     if (ac != 1)
         return(print_error("Error: Too many arguments\n"));
     t_data data;
     init(&data, envp);
-    pid = fork();
-    while (1)
+    if (fork() == 0)
     {
-        char *line = readline("minishell$>");
-        printf("%s\n", line);
-        if (*line)
+        arm_signals();
+        while (1)
+        {
+            char *line = readline("minishell$>");
+            printf("%s\n", line);
+            if (*line)
             add_history(line);
-        // parsing(line);
-        // exec(&line);
-        printf("hist %s\n", *history_list->line);
-        free(line);
+            // parsing(line);
+            // exec(&line);
+            free(line);
+        }
     }
+    else
+    {
+        signal(SIGINT, SIG_IGN);
+    }
+    return (0);
 }
