@@ -19,7 +19,6 @@ int main(int ac, char **av, char **envp)
     (void)av;
     if (ac != 1)
         return(print_error("Error: Too many arguments\n"));
-    char *heredoc = "";
     t_data data;
 
     init(&data, envp);
@@ -29,8 +28,8 @@ int main(int ac, char **av, char **envp)
         printf("%s\n", line);
         if (*line)
             add_history(line);
-        parsing(line);
-        exec(line);
+        // parsing(line);
+        // exec(line);
         free(line);
     }
 }

@@ -6,7 +6,7 @@
 #include <readline/history.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <limits.h>
+#include <linux/limits.h>
 #include "../libft/libft.h"
 
 

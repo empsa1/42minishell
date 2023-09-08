@@ -2,6 +2,7 @@ NAME = minishell
 
 SRCS =	minishell.c\
 		utils.c\
+		signals.c\
 
 OBJS = $(SRCS:.c=.o)
 
