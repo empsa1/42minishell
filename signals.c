@@ -9,6 +9,7 @@ void sigint_handler(int signal)
 
 int arm_signals()
 {
+    printf("TESTE\n");
     signal(SIGINT, sigint_handler);
     return (0);
 }
