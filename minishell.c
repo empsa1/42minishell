@@ -16,6 +16,7 @@ void init(t_data *data, char **envp)
 
 int main(int ac, char **av, char **envp)
 {
+    arm_signals();
     (void)av;
     if (ac != 1)
         return(print_error("Error: Too many arguments\n"));

@@ -3,6 +3,7 @@ NAME = minishell
 SRCS =	minishell.c\
 		utils.c\
 		signals.c\
+		# exec.c\
 
 OBJS = $(SRCS:.c=.o)
 
