@@ -20,7 +20,7 @@ int main(int ac, char **av, char **envp)
 
     (void)av;
     if (ac != 1)
-        return(print_error("Error: Too many arguments\n"));
+        return(print_error("Error: Too many arguments\n", NULL));
     t_data data;
     init(&data, envp);
     if (fork() == 0)

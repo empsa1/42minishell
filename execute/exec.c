@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/09 17:16:50 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/09 17:38:30 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,11 @@ int exec(char **str)
         return (-1);
     if (pid == 0)
     {
-        execve(str[0], str, NULL);
+        if (execve(str[0], str, NULL) == -1)
+        {
+            printf("%s\n", str[0]);
+            print_error("minishell: command not found: ", str[0]);
+        }
     }
     return (0);
 }
@@ -30,6 +34,6 @@ int main()
 {
     char **str;
 
-    str = ft_split("/usr/bin/ls -l", ' ');
+    str = ft_split("/usr/bin/laz ai", ' ');
     exec(str);
 }

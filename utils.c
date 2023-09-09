@@ -6,11 +6,11 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 10:14:12 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/06 15:33:16 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/09 17:39:42 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "./includes/minishell.h"
 
 void check_line(char *line)
 {
@@ -38,14 +38,10 @@ void check_line(char *line)
 	}
 }
 
-int	print_error(char *msg)
+int	print_error(char *msg, char *secondary)
 {
-	int	len;
-
-	len = 0;
-	while (msg[len])
-		len++;
-	if (write(2, msg, len) == -1)
-		printf("Error\n");
+	write(2, msg, ft_strlen(msg));
+	if (secondary)
+		write (2, secondary, ft_strlen(secondary));
 	return (1);
 }

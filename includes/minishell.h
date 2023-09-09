@@ -37,12 +37,13 @@ typedef enum e_token
 
 typedef struct s_command
 {
-    char *cmd;
+    char **cmd;
+    char *executable;
     struct s_command *next;
     int link;
 }   t_command;
 
-int	print_error(char *msg);
+int	print_error(char *msg, char *secondary);
 void check_line(char *line);
 int arm_signals();
 int exec(char **str);
