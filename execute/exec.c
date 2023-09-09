@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/09 17:38:30 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/09 17:53:28 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ int exec(char **str)
     {
         if (execve(str[0], str, NULL) == -1)
         {
-            printf("%s\n", str[0]);
-            print_error("minishell: command not found: ", str[0]);
+            print_error("minishell: command not found: ");
+            print_error(str[0]);
         }
     }
     return (0);

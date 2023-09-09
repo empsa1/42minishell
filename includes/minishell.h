@@ -43,7 +43,7 @@ typedef struct s_command
     int link;
 }   t_command;
 
-int	print_error(char *msg, char *secondary);
+int	print_error(char *msg);
 void check_line(char *line);
 int arm_signals();
 int exec(char **str);
