@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <linux/limits.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include "../libft/libft.h"
 
 
