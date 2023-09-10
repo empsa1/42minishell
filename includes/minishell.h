@@ -13,6 +13,11 @@
 #include "../libft/libft.h"
 
 
+typedef struct s_env
+{
+    char *content;
+    struct s_env *next;
+}   t_env;
 
 typedef struct s_data
 {
@@ -20,9 +25,11 @@ typedef struct s_data
     int stdin;
     int stdout;
     int stderr;
+    t_env *env;
     char **path;
     char cwd[PATH_MAX];
 }   t_data;
+
 
 typedef enum e_token
 {
@@ -47,9 +54,9 @@ typedef struct s_command
 }   t_command;
 
 int	print_error(char *msg);
-void check_line(char *line);
 int arm_signals();
 int exec(char **str);
-void test();
+int	cd(t_data *data, char *str);
+int	expand_path(char *str, char *buf);
 
 #endif
