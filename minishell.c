@@ -1,11 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
+/*   Updated: 2023/09/10 17:08:21 by anda-cun         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void init(t_data *data, char **envp)
 {
-    int i = 0;
+    int i;
     data->stdin = dup(STDIN_FILENO);
     data->stdout = dup(STDOUT_FILENO);
     data->stderr = dup(STDERR_FILENO);
+    i = -1;
     while (envp[++i])
 	{
 		if (ft_strnstr(envp[i], "PATH=", 5))
