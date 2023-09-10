@@ -58,5 +58,6 @@ int arm_signals();
 int exec(char **str);
 int	cd(t_data *data, char *str);
 int	expand_path(char *str, char *buf);
+int	env(t_data *data, char *str);
 
 #endif
