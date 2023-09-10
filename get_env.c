@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:46:54 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/10 20:58:26 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/10 22:08:26 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void get_env(char **envp)
     i = 0;
     while (envp[i])
         i++;
-    data.env = malloc(sizeof(t_env));
+    data.env = (t_env *)malloc(sizeof(t_env));
     if (!data.env)
         print_error("Error allocating memory\n");
     env_ptr = data.env;
@@ -31,7 +31,10 @@ void get_env(char **envp)
         env_ptr->content = ft_strdup(envp[i]);
         env_ptr->next = malloc(sizeof(t_env));
         if (!env_ptr->next)
+        {
             print_error("Error allocating memory\n");
+            break;
+        }
         env_ptr = env_ptr->next;
         i++;
     }

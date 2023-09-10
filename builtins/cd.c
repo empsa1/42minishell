@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:53:27 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/10 20:52:02 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/10 22:02:07 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int empty_path(t_data *data, char *buf)
         }
 		temp = temp->next;
 	}
-    printf("%s\n", buf);
 }
 
 int cd (t_data *data, char *str)
@@ -85,7 +84,6 @@ int cd (t_data *data, char *str)
         }
         temp = temp->next;
     }
-    env(data, NULL);
 }
 // int	main(void)
 // {
