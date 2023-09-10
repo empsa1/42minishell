@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:00:28 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/10 18:00:41 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/10 20:57:39 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,18 @@ int	expand_path(char *str, char *buf)
 	j = 0;
 	while (buf[i])
 		i++;
-	if (buf[i] != '/')
+	buf[i] = '/';
 		buf[i++] = '/'; //// CLEAN UP!
-	while (str[j])
+	while (str[j] != ' ')
 	{
+        if (*str == '.')
+            break;
 		if (!ft_strncmp(&str[j], "/.", 2) && str[j + 2] != '.')
 			j += 3;
 		else if (!ft_strncmp(&str[j], "/..", 3) || !ft_strncmp(&str[j], "../",
 				3))
 		{
-			i -= 2;
+            i--;
 			while (buf[i] != '/')
 				buf[i--] = 0;
 			buf[i] = 0;

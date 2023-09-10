@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:46:54 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/10 17:38:32 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/10 20:58:26 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ void get_env(char **envp)
         env_ptr = env_ptr->next;
         i++;
     }
-    cd(&data, "test/../execute/../test/test2/./test3/./../../");
+    cd(&data, "execute  yahlkjasd");
+    cd(&data, ".ais"); ////CHECK DOT
 }
 
 int main(int ac, char **av, char **envp)
