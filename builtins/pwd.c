@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/16 23:09:39 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/12 15:49:27 by anda-cun         ###   ########.fr       */
+/*   Created: 2023/09/12 15:52:45 by anda-cun          #+#    #+#             */
+/*   Updated: 2023/09/12 15:55:54 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/minishell.h"
 
-void	ft_putstr_fd(char *s, int fd)
+int pwd(void)
 {
-	write(fd, s, ft_strlen(s));
+    char buf[PATH_MAX];
+    
+    return(printf("%s\n", getcwd(buf, PATH_MAX)));
 }

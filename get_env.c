@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:46:54 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/10 22:12:17 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/12 17:42:47 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,10 @@ void get_env(char **envp)
         print_error("Error allocating memory\n");
     env_ptr = data.env;
     i = 0;
+    env_ptr->content = ft_strdup(envp[i++]);
+    env_ptr ->next = NULL;
     while (envp[i])
     {
-        env_ptr->content = ft_strdup(envp[i]);
         env_ptr->next = malloc(sizeof(t_env));
         if (!env_ptr->next)
         {
@@ -36,10 +37,14 @@ void get_env(char **envp)
             break;
         }
         env_ptr = env_ptr->next;
+        env_ptr->content = ft_strdup(envp[i]);
+        env_ptr->next = NULL;
         i++;
     }
-    cd(&data, "execute  yahlkjasd");
-    cd(&data, ".ais"); ////CHECK DOT
+    cd(&data, "../");
+    cd(&data, "./minishell/");
+    cd(&data, "./includes");
+    export(&data, "ai=u    dfgdfgdf");
 }
 
 int main(int ac, char **av, char **envp)

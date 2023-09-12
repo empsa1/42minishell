@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:53:27 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/12 10:24:49 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/12 15:51:48 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,29 +20,30 @@ int empty_path(t_data *data, char *buf)
     i = -1;
     printf("%s\n", buf);
     temp = data->env;
-	while (temp->next)
-	{
-        if(!ft_strncmp(temp->content, "HOME=", 5))
+    while (temp->next)
+    {
+        if (!ft_strncmp(temp->content, "HOME=", 5))
         {
             while (temp->content[5 + ++i])
                 buf[i] = temp->content[5 + i];
             while (buf[i])
                 buf[i++] = 0;
         }
-		temp = temp->next;
-	}
+        temp = temp->next;
+    }
+    return (0);
 }
 
-int cd (t_data *data, char *str)
+int cd(t_data *data, char *str)
 {
     t_env *temp;
     char *oldpwd;
-    char	buf[PATH_MAX];
+    char buf[PATH_MAX];
     int i;
 
     i = 0;
     temp = data->env;
-	getcwd(buf, PATH_MAX);
+    getcwd(buf, PATH_MAX);
     oldpwd = ft_strdup(buf);
     if (!str)
         empty_path(data, buf);
@@ -63,14 +64,13 @@ int cd (t_data *data, char *str)
     }
     else
         expand_path(str, buf);
-    printf("path to check: %s\n", buf);
     if (chdir(buf) == -1)
-	{
-		printf("cd: %s: %s\n", strerror(errno), str);
-		return (errno);
-	}
+    {
+        printf("cd: %s: %s\n", strerror(errno), str);
+        return (errno);
+    }
     temp = data->env;
-	while (temp->next)
+    while (temp->next)
     {
         if (!ft_strncmp(temp->content, "OLDPWD=", 7))
         {
@@ -83,8 +83,8 @@ int cd (t_data *data, char *str)
             temp->content = ft_strjoin("PWD=", buf);
         }
         temp = temp->next;
-        return (0);
     }
+    return (0);
 }
 // int	main(void)
 // {

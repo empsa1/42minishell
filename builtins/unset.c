@@ -1,18 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/16 23:09:39 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/12 15:49:27 by anda-cun         ###   ########.fr       */
+/*   Created: 2023/09/12 17:43:40 by anda-cun          #+#    #+#             */
+/*   Updated: 2023/09/12 17:48:02 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_putstr_fd(char *s, int fd)
+int	unset(t_data *data, char *str)
 {
-	write(fd, s, ft_strlen(s));
+    t_env *temp;
+
+    temp = data->env;
+    while (temp->next)
+    {
+        if (!ft_strncmp(temp->content, str, ft_strlen(str)))
+        {
+            
+        }
+    }
 }
