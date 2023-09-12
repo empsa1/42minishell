@@ -53,8 +53,11 @@ typedef struct s_command
     int link;
 }   t_command;
 
+int create_executor(char *command);
 int	print_error(char *msg);
-int arm_signals();
+void sigint_handler(int signal);
+void sigEOF_handler(int signal);
+void sigint_handler_parent(int signal);
 int exec(char **str);
 int	cd(t_data *data, char *str);
 int	expand_path(char *str, char *buf);

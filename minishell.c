@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: eportela <eportela@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/10 17:08:21 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/12 10:13:26 by eportela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int create_executor(char *command)
+{
+    printf("Inside forking child process %s\n", command);
+    signal(SIGINT, sigint_handler);
+    // exec(&command);
+    printf("GOing to kill it");
+    kill(SIGINT, getpid());
+    return (0);
+}
 
 void init(t_data *data, char **envp)
 {
@@ -30,29 +40,39 @@ void init(t_data *data, char **envp)
 int main(int ac, char **av, char **envp)
 {
     // HIST_ENTRY **history_list;
-
+    //char *buffer = NULL;
     (void)av;
+    printf("%d\n", getpid());
     if (ac != 1)
         return(print_error("Error: Too many arguments\n"));
     t_data data;
     init(&data, envp);
-    if (fork() == 0)
+    signal(SIGINT, sigint_handler_parent); //makes parent process ignore SIGINT INPUT
+    //signal(SIGQUIT, sigEOF_handler);
+    while (1)
     {
-        arm_signals();
-        while (1)
+        printf("Another Rotation\n");
+        char *line = readline("minishell$>");
+        if (*line)
         {
-            char *line = readline("minishell$>");
-            printf("%s\n", line);
-            if (*line)
-            add_history(line);
-            // parsing(line);
-            // exec(&line);
-            free(line);
+            if (fork() == 0)
+            {
+                //if (parsing(line) == valid);
+                    create_executor(line);
+                printf("PID: %d, Command: %s\n", getpid(), line);
+            }
+            else 
+            {   
+                wait(NULL); //WAITS FOR CHILD PROCESS TO DIE BEFORE CONTINUING
+                printf("Inside if line condition in parent process\n");
+                add_history(line);
+                //read(STDIN_FILENO, buffer, BUFSIZ);
+                //printf("Buffer in stdin: %s\n", buffer);
+                // if (buffer == NULL)
+                //     sigEOF_handler(1);  
+            }
         }
-    }
-    else
-    {
-        signal(SIGINT, SIG_IGN);
+        free(line);
     }
     return (0);
 }
