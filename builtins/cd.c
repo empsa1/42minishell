@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:53:27 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/10 22:02:07 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/12 10:24:49 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int cd (t_data *data, char *str)
             temp->content = ft_strjoin("PWD=", buf);
         }
         temp = temp->next;
+        return (0);
     }
 }
 // int	main(void)

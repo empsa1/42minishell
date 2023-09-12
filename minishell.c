@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eportela <eportela@student.42.fr>          +#+  +:+       +#+        */
+/*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/12 10:13:26 by eportela         ###   ########.fr       */
+/*   Updated: 2023/09/12 10:21:34 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int main(int ac, char **av, char **envp)
         char *line = readline("minishell$>");
         if (*line)
         {
+            if (ft_strtrim(line, " \n\t\r\b") != NULL)
+                add_history(line);
             if (fork() == 0)
             {
                 //if (parsing(line) == valid);
@@ -65,7 +67,6 @@ int main(int ac, char **av, char **envp)
             {   
                 wait(NULL); //WAITS FOR CHILD PROCESS TO DIE BEFORE CONTINUING
                 printf("Inside if line condition in parent process\n");
-                add_history(line);
                 //read(STDIN_FILENO, buffer, BUFSIZ);
                 //printf("Buffer in stdin: %s\n", buffer);
                 // if (buffer == NULL)

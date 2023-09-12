@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:00:28 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/10 20:57:39 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/12 10:24:57 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	expand_path(char *str, char *buf)
 	{
         if (*str == '.')
             break;
-		if (!ft_strncmp(&str[j], "/.", 2) && str[j + 2] != '.')
+		if (!ft_strncmp(&str[j], "/.", 2) && str[j + 2] && str[j + 2] != '.')
 			j += 3;
 		else if (!ft_strncmp(&str[j], "/..", 3) || !ft_strncmp(&str[j], "../",
 				3))
@@ -41,4 +41,5 @@ int	expand_path(char *str, char *buf)
 		buf[i++] = str[j++];
 	}
 	buf[i] = '\0';
+	return (0);
 }
