@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:41:40 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/12 15:51:34 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/13 09:40:12 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int echo(char *str)
     if (!ft_strncmp(str, "-n", 2))
     {
         if (!ft_strncmp(str, "-n ", 3))
-            return (printf("%s", ft_strtrim(&str[2], " ")));
+            return(ft_putstr_fd(ft_strtrim(&str[2], " "), 1));
         while (str[2 + i])
         {
             if (str[2 + i] == 'n')
@@ -31,17 +31,16 @@ int echo(char *str)
                 break;
             }
             else
-                return (printf("%s", str));
+                return(ft_putstr_fd(str, 1));
             i++;
         }
-        return (printf("%s", ft_strtrim(&str[2 + i], " ")));
+        return(ft_putstr_fd(ft_strtrim(&str[2 + i], " "), 1));
     }
-    else
-        return (printf("%s\n", ft_strtrim(str, " ")));
-    return (0);
+    return(ft_putendl_fd(ft_strtrim(str, " "), 1));
 }
 
-// int main()
+// int main(int ac, char **av)
 // {
-//     echo("-n nnnnaaaa");
+//     if (ac == 2)
+//         return(echo(av[1]));
 // }

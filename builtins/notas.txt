@@ -1,0 +1,8 @@
+mem leaks
+echo ok
+pwd ok
+env ok
+cd ? - return value
+export - return value
+unset - return value
+exit

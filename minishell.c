@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/12 10:21:34 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/13 09:30:06 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int main(int ac, char **av, char **envp)
     (void)av;
     printf("%d\n", getpid());
     if (ac != 1)
-        return(print_error("Error: Too many arguments\n"));
+        return(ft_putstr_fd("Error: Too many arguments\n", 1));
     t_data data;
     init(&data, envp);
     signal(SIGINT, sigint_handler_parent); //makes parent process ignore SIGINT INPUT

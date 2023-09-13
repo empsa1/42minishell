@@ -63,5 +63,7 @@ int	expand_path(char *str, char *buf);
 int	env(t_data *data, char *str);
 int export(t_data *data, char *str);
 int	unset(t_data *data, char *str);
+int pwd(void);
+t_data *get_env(char **envp);
 
 #endif

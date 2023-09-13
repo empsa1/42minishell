@@ -1,7 +1,6 @@
 NAME = minishell
 
 SRCS =	minishell.c\
-		utils.c\
 		signals.c\
 		# execute/exec.c\
 
