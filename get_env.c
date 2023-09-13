@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:46:54 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/12 17:42:47 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/12 20:11:57 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void get_env(char **envp)
         i++;
     data.env = (t_env *)malloc(sizeof(t_env));
     if (!data.env)
-        print_error("Error allocating memory\n");
+        ft_putendl_fd("Error allocating memory\n", 2);
     env_ptr = data.env;
     i = 0;
     env_ptr->content = ft_strdup(envp[i++]);
@@ -33,7 +33,7 @@ void get_env(char **envp)
         env_ptr->next = malloc(sizeof(t_env));
         if (!env_ptr->next)
         {
-            print_error("Error allocating memory\n");
+            ft_putendl_fd("Error allocating memory\n", 2);
             break;
         }
         env_ptr = env_ptr->next;
@@ -44,7 +44,9 @@ void get_env(char **envp)
     cd(&data, "../");
     cd(&data, "./minishell/");
     cd(&data, "./includes");
-    export(&data, "ai=u    dfgdfgdf");
+    export(&data, "ai=u    dfgdfgdf"); // CHECK DOUBLES
+    export(&data, "becabeca=aaa    dfgdfgdf");
+    unset(&data, "LC_TIME");
 }
 
 int main(int ac, char **av, char **envp)

@@ -54,7 +54,6 @@ typedef struct s_command
 }   t_command;
 
 int create_executor(char *command);
-int	print_error(char *msg);
 void sigint_handler(int signal);
 void sigEOF_handler(int signal);
 void sigint_handler_parent(int signal);
@@ -63,5 +62,6 @@ int	cd(t_data *data, char *str);
 int	expand_path(char *str, char *buf);
 int	env(t_data *data, char *str);
 int export(t_data *data, char *str);
+int	unset(t_data *data, char *str);
 
 #endif

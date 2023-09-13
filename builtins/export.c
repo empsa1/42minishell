@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 15:56:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/12 17:43:21 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/12 20:06:14 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ int	export(t_data *data, char *str)
 	if (!str)
 		return (0);
 	while (temp->next)
+	{
 		temp = temp->next;
+	}
 	temp->next = malloc(sizeof(t_env));
 	temp = temp->next;
 	i = 0;
@@ -35,6 +37,6 @@ int	export(t_data *data, char *str)
 		i++;
 	temp->content = ft_substr(str, 0, i);
 	temp->next = NULL;
-	env(data, NULL);
+	// env(data, NULL);
 	return (0);
 }

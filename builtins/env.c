@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 20:32:07 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/12 17:02:18 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/12 20:12:11 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	env(t_data *data, char *str)
     
 	if (str)
 	{
-		print_error("minishell: env: syntax error\n");
+		ft_putendl_fd("minishell: env: syntax error\n", 2);
 		return (-1);
 	}
 	temp = data->env;
