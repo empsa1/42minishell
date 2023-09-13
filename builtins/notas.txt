@@ -1,8 +1,9 @@
-mem leaks
+check mem leaks
 echo ok
 pwd ok
 env ok
+expand_path
 cd ? - return value
-export - return value
+export - empty command
 unset - return value
 exit

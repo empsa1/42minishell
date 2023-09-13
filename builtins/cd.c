@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:53:27 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/13 15:37:08 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/13 22:49:33 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	change_dir(char *buf, char *str)
 int	empty_path(t_data *data, char *buf)
 {
 	int		i;
-	t_env	*temp;
+	t_node	*temp;
 
 	i = -1;
 	temp = data->env;
@@ -46,7 +46,7 @@ int	empty_path(t_data *data, char *buf)
 	return (0);
 }
 
-void	change_pwd_oldpwd(t_env *temp, char *buf, char *oldpwd)
+void	change_pwd_oldpwd(t_node *temp, char *buf, char *oldpwd)
 {
 	while (temp->next)
 	{

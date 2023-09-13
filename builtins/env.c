@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 20:32:07 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/12 20:12:11 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/13 22:49:38 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	env(t_data *data, char *str)
 {
-    t_env *temp;
+    t_node *temp;
     
 	if (str)
 	{

@@ -6,17 +6,44 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 17:43:40 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/13 16:08:09 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/13 22:50:33 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int unset(t_data *data, char *str)
+int	get_key_size(char *str)
 {
-	t_env *prev_node;
-	t_env *cur_node;
-	int i;
+	int	i;
+
+	i = 0;
+	while (str[i] != '=')
+		i++;
+	return (i);
+}
+
+void	check_env(t_node *cur_node, t_node *prev_node, char *str)
+{
+	while (cur_node)
+	{
+		if (ft_strlen(str) == get_key_size(cur_node->content)
+			&& !ft_strncmp(cur_node->content, str, ft_strlen(str)))
+		{
+			free(cur_node->content);
+			prev_node->next = cur_node->next;
+			free(cur_node);
+			return ;
+		}
+		prev_node = cur_node;
+		cur_node = cur_node->next;
+	}
+}
+
+int	unset(t_data *data, char *str)
+{
+	t_node	*prev_node;
+	t_node	*cur_node;
+	int		i;
 
 	prev_node = NULL;
 	cur_node = data->env;
@@ -36,17 +63,6 @@ int unset(t_data *data, char *str)
 			}
 		}
 	}
-	while (cur_node)
-	{
-		if (!ft_strncmp(cur_node->content, str, ft_strlen(str)))
-		{
-			free(cur_node->content);
-			prev_node->next = cur_node->next;
-			free(cur_node);
-			break;
-		}
-		prev_node = cur_node;
-		cur_node = cur_node->next;
-	}
+	check_env(cur_node, prev_node, str);
 	return (0);
 }

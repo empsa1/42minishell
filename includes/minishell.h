@@ -13,11 +13,11 @@
 #include "../libft/libft.h"
 
 
-typedef struct s_env
+typedef struct s_node
 {
     char *content;
-    struct s_env *next;
-}   t_env;
+    struct s_node *next;
+}   t_node;
 
 typedef struct s_data
 {
@@ -25,7 +25,8 @@ typedef struct s_data
     int stdin;
     int stdout;
     int stderr;
-    t_env *env;
+    t_node *env;
+    t_node *exp;
     char **path;
     char cwd[PATH_MAX];
 }   t_data;
@@ -65,5 +66,6 @@ int export(t_data *data, char *str);
 int	unset(t_data *data, char *str);
 int pwd(void);
 t_data *get_env(char **envp);
+void cleanup(t_data *data);
 
 #endif
