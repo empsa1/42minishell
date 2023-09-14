@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:46:54 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/14 10:46:48 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/14 12:09:08 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * @return t_data* 
  */
 
-void get_export(t_data *data)
+void get_export(t_data *data, envp)
 {
     int i;
     t_node *exp_ptr;
@@ -67,7 +67,7 @@ t_data *get_env(char **envp)
         env_ptr->next = NULL;
         i++;
     }
-    get_export(data);
+    get_export(data, envp);
     return (data);
 }
 
