@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:46:54 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/14 12:09:08 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/14 13:01:34 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,34 @@
  * @return t_data* 
  */
 
-void get_export(t_data *data, envp)
-{
-    int i;
-    t_node *exp_ptr;
-    t_node *env_ptr;
+// void get_export(t_data *data)
+// {
+//     int i;
+//     t_node *exp_ptr;
+//     t_node *env_ptr;
     
-    i = 0;
-    exp_ptr = data->exp;
-    i = 0;
-    while (envp[i])
-    {
-        exp_ptr = malloc(sizeof(t_node));
-        if (!exp_ptr)
-        {
-            ft_putendl_fd("Error allocating memory\n", 2);
-            break;
-        }
-        exp_ptr->content = ft_strdup(envp[i]);
-        printf("%s\n", exp_ptr->content);
-        exp_ptr->next = NULL;
-        i++;
-    }
-}
+//     i = 0;
+//     env_ptr = data->env;
+//     exp_ptr = data->exp;
+//     i = 0;
+//     while (env_ptr)
+//     {
+//         exp_ptr = env_ptr;
+//         if (!exp_ptr)
+//         {
+//             ft_putendl_fd("Error allocating memory\n", 2);
+//             break;
+//         }
+//         if (ft_strncmp(exp_ptr->content, env_ptr->next->content, ft_strlen(exp_ptr->content)))
+//             env_ptr = env_ptr->next;
+//         else
+//         {
+//             printf("%s\n", exp_ptr->content);
+//             exp_ptr->next = NULL;
+//             i++;
+//         }
+//     }
+// }
 
 t_data *get_env(char **envp)
 {
@@ -51,20 +56,26 @@ t_data *get_env(char **envp)
 
     data = malloc(sizeof(t_data));
     i = 0;
+    data->env = malloc(sizeof(t_node));
+    env_ptr = data->env;
     while (envp[i])
         i++;
-    env_ptr = data->exp;
     i = 0;
     while (envp[i])
     {
-        env_ptr = malloc(sizeof(t_node));
         if (!env_ptr)
         {
             ft_putendl_fd("Error allocating memory\n", 2);
             break;
         }
         env_ptr->content = ft_strdup(envp[i]);
-        env_ptr->next = NULL;
+        if (envp[i + 1])
+        {
+            env_ptr->next = malloc(sizeof(t_node));
+            env_ptr = env_ptr->next;
+        }
+        else
+            env_ptr->next = NULL;
         i++;
     }
     get_export(data, envp);
