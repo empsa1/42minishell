@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:46:54 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/14 13:07:30 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/14 16:01:10 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,52 @@
 
 /**
  * @brief create linked list of environment variables, and linked list of exported variables
- * 
- * @param envp 
- * @return t_data* 
+ *
+ * @param envp
+ * @return t_data*
  */
 
 void get_export(t_data *data)
 {
-    int i;
     t_node *exp_ptr;
     t_node *env_ptr;
-    
-    i = 0;
+
     env_ptr = data->env;
+    data->exp = malloc(sizeof(t_node));
     exp_ptr = data->exp;
-    i = 0;
+    exp_ptr->content = env_ptr->content;
     while (env_ptr)
     {
-        exp_ptr = env_ptr;
-        if (!exp_ptr)
+        printf("%s\n", env_ptr->content);
+        if (env_ptr->next)
         {
-            ft_putendl_fd("Error allocating memory\n", 2);
-            break;
-        }
-        if (ft_strncmp(exp_ptr->content, env_ptr->next->content, ft_strlen(exp_ptr->content)))
-            env_ptr = env_ptr->next;
-        else
-        {
-            printf("%s\n", exp_ptr->content);
-            exp_ptr->next = NULL;
-            i++;
+            if (ft_strncmp(exp_ptr->content, env_ptr->next->content, ft_strlen(exp_ptr->content)) > 0)
+            {
+                exp_ptr->content = env_ptr->next->content;
+                if (exp_ptr->next)
+                    free(exp_ptr->next);
+                exp_ptr->next = NULL;
+                exp_ptr = data->exp;
+                env_ptr = data->env;
+            }
+            else
+            {
+                if (!exp_ptr->next)
+                    exp_ptr->next = malloc(sizeof(t_node));
+                exp_ptr = exp_ptr->next;
+                // exp_ptr->content = env_ptr->next->content;
+                if (!exp_ptr->next)
+                    exp_ptr->next = NULL;
+                env_ptr = env_ptr->next;
+            }
         }
     }
+    exp_ptr = data->exp;
+    // while (exp_ptr)
+    // {
+    //     printf("%s\n", exp_ptr->content);
+    //     exp_ptr = exp_ptr->next;
+    // }
 }
 
 t_data *get_env(char **envp)
@@ -78,7 +92,7 @@ t_data *get_env(char **envp)
             env_ptr->next = NULL;
         i++;
     }
-    get_export(data);
+    // get_export(data);
     return (data);
 }
 

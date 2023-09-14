@@ -29,6 +29,7 @@ typedef struct s_data
     int stderr;
     t_node *env;
     t_node *exp;
+    t_node *exported_vars;
     char **path;
     char cwd[PATH_MAX];
 }   t_data;
@@ -60,8 +61,6 @@ typedef struct s_command
 
 int create_executor(char *command);
 void sigint_handler(int signal);
-void sigEOF_handler(int signal);
-void sigint_handler_parent(int signal);
 int exec(char **str);
 int	cd(t_data *data, char *str);
 int	expand_path(char *str, char *buf);
@@ -72,5 +71,6 @@ int pwd(void);
 t_data *get_env(char **envp);
 void cleanup(t_data *data);
 int echo(char *str);
+int get_length_to_char(char *str, char c);
 
 #endif

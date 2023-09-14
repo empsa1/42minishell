@@ -4,9 +4,10 @@ builtins
 
 TODO
 builtins
-    check mem leaks
-    export - empty command
+    export
     unset - return value
     cd ? - return value
-    expand_path
     exit
+    check mem leaks
+(get_env/)get_exp
+expand_path
