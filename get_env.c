@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:46:54 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/13 22:49:17 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/14 10:30:41 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,31 @@
  * @return t_data* 
  */
 
+void get_export(t_data *data, char **envp)
+{
+    int i;
+    t_node *exp_ptr;
+    
+    i = 0;
+    while (envp[i])
+        i++;
+    exp_ptr = data->exp;
+    i = 0;
+    while (envp[i])
+    {
+        exp_ptr = malloc(sizeof(t_node));
+        if (!exp_ptr)
+        {
+            ft_putendl_fd("Error allocating memory\n", 2);
+            break;
+        }
+        exp_ptr->content = ft_strdup(envp[i]);
+        printf("%s\n", exp_ptr->content);
+        exp_ptr->next = NULL;
+        i++;
+    }
+}
+
 t_data *get_env(char **envp)
 {
     int i;
@@ -29,36 +54,21 @@ t_data *get_env(char **envp)
     i = 0;
     while (envp[i])
         i++;
-    data->env = (t_node *)malloc(sizeof(t_node));
-    if (!data->env)
-        ft_putendl_fd("Error allocating memory\n", 2);
-    env_ptr = data->env;
+    env_ptr = data->exp;
     i = 0;
-    env_ptr->content = ft_strdup(envp[i++]);
-    env_ptr ->next = NULL;
     while (envp[i])
     {
-        env_ptr->next = malloc(sizeof(t_node));
-        if (!env_ptr->next)
+        env_ptr = malloc(sizeof(t_node));
+        if (!env_ptr)
         {
             ft_putendl_fd("Error allocating memory\n", 2);
             break;
         }
-        env_ptr = env_ptr->next;
         env_ptr->content = ft_strdup(envp[i]);
         env_ptr->next = NULL;
         i++;
     }
-    // env(data,NULL);
-    // cd(data, "./exams");
-    // pwd();
-    // // env(data,NULL);
-    // cd(data, "../sdlfkj");
-    // pwd();
-    // // env(data,NULL);
-    // export(data, "ai=u    dfgdfgdf"); // CHECK DOUBLES
-    // export(data, "becabeca=aaa    dfgdfgdf");
-    // unset(data, "LC_TIME");
+    get_export(data, envp);
     return (data);
 }
 
