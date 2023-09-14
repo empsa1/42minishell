@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 17:43:40 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/13 22:50:33 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/14 09:50:23 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	check_env(t_node *cur_node, t_node *prev_node, char *str)
 {
 	while (cur_node)
 	{
-		if (ft_strlen(str) == get_key_size(cur_node->content)
+		if ((int)ft_strlen(str) == get_key_size(cur_node->content)
 			&& !ft_strncmp(cur_node->content, str, ft_strlen(str)))
 		{
 			free(cur_node->content);

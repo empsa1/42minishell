@@ -67,5 +67,6 @@ int	unset(t_data *data, char *str);
 int pwd(void);
 t_data *get_env(char **envp);
 void cleanup(t_data *data);
+int echo(char *str);
 
 #endif

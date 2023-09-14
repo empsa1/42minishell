@@ -1,9 +1,12 @@
-check mem leaks
-echo ok
-pwd ok
-env ok
-expand_path
-cd ? - return value
-export - empty command
-unset - return value
-exit
+OK
+builtins
+    echo / pwd / env
+
+TODO
+builtins
+    check mem leaks
+    export - empty command
+    unset - return value
+    cd ? - return value
+    expand_path
+    exit
