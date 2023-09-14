@@ -6,7 +6,7 @@
 /*   By: eportela <eportela@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/14 10:45:17 by eportela         ###   ########.fr       */
+/*   Updated: 2023/09/14 12:12:51 by eportela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ int main(int ac, char **av, char **envp)
         char *line = readline("minishell$>");
         if (line != NULL && *line)
             add_history(line);
-            if (ft_strtrim(line, " \n\t\r\b") != NULL && parsing(line))
-                    create_executor(line); 
+            if (ft_strtrim(line, " \n\t\r\b") != NULL)
+                    create_executor(parsing(line)); 
         free(line);
     }
     return (0);
