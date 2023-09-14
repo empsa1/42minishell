@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 15:37:10 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/14 10:28:48 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/14 11:44:34 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,20 @@
 
 int main(int ac, char **av, char **envp)
 {
-    t_data *data;
+    // t_data *data;
     // t_node *temp;
     
-    if (ac != 2 || !av || !envp)
+    if (!ac || !av || !envp)
         return(1);
-    data = get_env(envp);
+    // data = get_env(envp);
+    // int fd[2];
+    // pipe(fd);
+    int fd = open("file", O_RDONLY);
+    dup2(fd, STDIN_FILENO);
+    // close(fd[0]);
+    // fd[1] = open("file", O_RDONLY);
+    char *exec[] = { "/usr/bin/wc", "-l"};
+    execve(exec[0], exec, NULL);
     // export(data, av[1]);
     // env(data, NULL);
     // data = get_env(envp);
@@ -30,6 +38,6 @@ int main(int ac, char **av, char **envp)
     // // export(data, NULL);
     // // env(data, NULL);
     // // unset(data, av[1]);
-    cleanup(data);
+    // cleanup(data);
     return(0);
 }

@@ -10,6 +10,8 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "../libft/libft.h"
 
 
@@ -34,14 +36,15 @@ typedef struct s_data
 
 typedef enum e_token
 {
+    ORDINARY,   // str
+    IN,         // <
     PIPE,       // |
-    HEREDOC,    // <<
     LPR,        // (
     RPR,        // )
     SC,         // '
     DC,         // "
     OUT,        // >
-    IN,         // <
+    HEREDOC,    // <<
     APPEND,     // >>
     END,        // end of command
 }   t_token;
@@ -50,8 +53,9 @@ typedef struct s_command
 {
     char **cmd;
     char *executable;
-    struct s_command *next;
     int link;
+    int valid;
+    struct s_command *next;
 }   t_command;
 
 int create_executor(char *command);

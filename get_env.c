@@ -6,27 +6,26 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:46:54 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/14 10:30:41 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/14 10:46:48 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
 /**
- * @brief create linked list of environment variables
+ * @brief create linked list of environment variables, and linked list of exported variables
  * 
  * @param envp 
  * @return t_data* 
  */
 
-void get_export(t_data *data, char **envp)
+void get_export(t_data *data)
 {
     int i;
     t_node *exp_ptr;
+    t_node *env_ptr;
     
     i = 0;
-    while (envp[i])
-        i++;
     exp_ptr = data->exp;
     i = 0;
     while (envp[i])
@@ -68,7 +67,7 @@ t_data *get_env(char **envp)
         env_ptr->next = NULL;
         i++;
     }
-    get_export(data, envp);
+    get_export(data);
     return (data);
 }
 
