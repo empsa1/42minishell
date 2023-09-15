@@ -1,1 +1,20 @@
-coiso
+total 156
+-rwxr-xr-x 1 anda-cun 2023_lisboa 22792 Sep 15 07:44 a.out
+drwxr-xr-x 2 anda-cun 2023_lisboa  4096 Sep 14 16:56 builtins
+-rw-r--r-- 1 anda-cun 2023_lisboa  1186 Sep 14 10:18 cleanup.c
+drwxr-xr-x 2 anda-cun 2023_lisboa  4096 Sep 14 10:18 execute
+-rw-r--r-- 1 anda-cun 2023_lisboa  2134 Sep 14 10:18 expand_path.c
+-rw-r--r-- 1 anda-cun 2023_lisboa     7 Sep 14 12:11 file
+-rw-r--r-- 1 anda-cun 2023_lisboa     0 Sep 15 07:59 file1
+-rw-r--r-- 1 anda-cun 2023_lisboa     0 Sep 15 07:59 file2
+-rw-r--r-- 1 anda-cun 2023_lisboa  3087 Sep 14 16:01 get_env.c
+drwxr-xr-x 2 anda-cun 2023_lisboa  4096 Sep 14 12:11 includes
+drwxr-xr-x 2 anda-cun 2023_lisboa  4096 Sep 14 10:18 libft
+-rw-r--r-- 1 anda-cun 2023_lisboa 71008 Sep 14 10:18 libft.a
+-rw-r--r-- 1 anda-cun 2023_lisboa   628 Sep 14 10:18 Makefile
+-rw-r--r-- 1 anda-cun 2023_lisboa  1954 Sep 14 13:08 minishell.c
+-rw-r--r-- 1 anda-cun 2023_lisboa   848 Sep 14 13:08 parsing.c
+-rw-r--r-- 1 anda-cun 2023_lisboa   297 Sep 14 12:03 signals.c
+-rw-r--r-- 1 anda-cun 2023_lisboa    77 Sep 12 10:26 suppressions.supp
+-rw-r--r-- 1 anda-cun 2023_lisboa    22 Sep  8 11:16 tests
+-rw-r--r-- 1 anda-cun 2023_lisboa  1061 Sep 14 17:09 utils.c

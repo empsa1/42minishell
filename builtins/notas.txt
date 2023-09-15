@@ -1,13 +1,13 @@
 OK
 builtins
     echo / pwd / env
+get_env
 
 TODO
 builtins
-    export
+    export - check alphanum
     unset - return value
     cd ? - return value
     exit
     check mem leaks
-(get_env/)get_exp
 expand_path

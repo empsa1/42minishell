@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 15:37:10 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/14 17:36:42 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/15 15:47:34 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,14 @@ int main(int ac, char **av, char **envp)
     // execve("/usr/bin/ls", exec, NULL);
     // export(data, av[1]);
     data = get_env(envp);
-    // env(data, NULL);
-    data->exp = NULL;
+    data->exported_vars = malloc(sizeof(t_node));
+    data->exported_vars->content = NULL;
+    data->exported_vars->next = NULL;
+    export(data, av[1]);
     export(data, NULL);
-    // env(data, NULL);
+    // print_exported(data->exported_vars);
+    printf("ENVVVVVV\n");
+    env(data, NULL);
     // printf("%p\n", data->exp);
     // // export(data, NULL);
     // // env(data, NULL);

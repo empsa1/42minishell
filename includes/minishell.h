@@ -19,6 +19,7 @@ typedef struct s_node
 {
     char *content;
     struct s_node *next;
+    struct s_node *prev;
 }   t_node;
 
 typedef struct s_data
@@ -28,7 +29,6 @@ typedef struct s_data
     int stdout;
     int stderr;
     t_node *env;
-    t_node *exp;
     t_node *exported_vars;
     char **path;
     char cwd[PATH_MAX];
@@ -72,5 +72,8 @@ t_data *get_env(char **envp);
 void cleanup(t_data *data);
 int echo(char *str);
 int get_length_to_char(char *str, char c);
+void free_nodes(t_node *node);
+void print_nodes(t_node *node);
+void print_exported(t_node *node);
 
 #endif
