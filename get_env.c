@@ -5,100 +5,57 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/10 16:46:54 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/15 08:43:30 by anda-cun         ###   ########.fr       */
+/*   Created: 2023/09/16 18:25:47 by anda-cun          #+#    #+#             */
+/*   Updated: 2023/09/16 19:53:30 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-/**
- * @brief create linked list of environment variables, and linked list of exported variables
- *
- * @param envp
- * @return t_data*
- */
-
-// void get_export(t_data *data)
-// {
-//     t_node *exp_ptr;
-//     t_node *env_ptr;
-
-//     env_ptr = data->env;
-//     data->exp = malloc(sizeof(t_node));
-//     exp_ptr = data->exp;
-//     exp_ptr->content = env_ptr->content;
-//     while (env_ptr)
-//     {
-//         printf("%s\n", env_ptr->content);
-//         if (env_ptr->next)
-//         {
-//             if (ft_strncmp(exp_ptr->content, env_ptr->next->content, ft_strlen(exp_ptr->content)) > 0)
-//             {
-//                 exp_ptr->content = env_ptr->next->content;
-//                 if (exp_ptr->next)
-//                     free(exp_ptr->next);
-//                 exp_ptr->next = NULL;
-//                 exp_ptr = data->exp;
-//                 env_ptr = data->env;
-//             }
-//             else
-//             {
-//                 if (!exp_ptr->next)
-//                     exp_ptr->next = malloc(sizeof(t_node));
-//                 exp_ptr = exp_ptr->next;
-//                 // exp_ptr->content = env_ptr->next->content;
-//                 if (!exp_ptr->next)
-//                     exp_ptr->next = NULL;
-//                 env_ptr = env_ptr->next;
-//             }
-//         }
-//     }
-//     exp_ptr = data->exp;
-    // while (exp_ptr)
-    // {
-    //     printf("%s\n", exp_ptr->content);
-    //     exp_ptr = exp_ptr->next;
-    // }
-// }
-
-t_data *get_env(char **envp)
+t_pair *get_env(char **envp)
 {
     int i;
-    t_data *data;
-    t_node *env_ptr;
+    t_pair *node;
+    t_pair *temp_node;
 
-    data = malloc(sizeof(t_data));
     i = 0;
-    data->env = malloc(sizeof(t_node));
-    env_ptr = data->env;
-    while (envp[i])
-        i++;
-    i = 0;
+    node = malloc(sizeof(t_pair));
+    temp_node = node;
     while (envp[i])
     {
-        if (!env_ptr)
-        {
-            ft_putendl_fd("Error allocating memory\n", 2);
-            break;
-        }
-        env_ptr->content = ft_strdup(envp[i]);
+        temp_node->key = ft_substr(envp[i], 0, get_length_to_char(envp[i], '=') + 1);
+        temp_node->value = ft_strdup(ft_strchr(envp[i], '=') + 1);
         if (envp[i + 1])
         {
-            env_ptr->next = malloc(sizeof(t_node));
-            env_ptr = env_ptr->next;
+            temp_node->next = malloc(sizeof(t_pair));
+            temp_node = temp_node->next;
         }
         else
-            env_ptr->next = NULL;
+        {
+            temp_node->next = NULL;   
+            break;
+        }
         i++;
     }
-    // get_export(data);
-    return (data);
+    return(node);
 }
 
 // int main(int ac, char **av, char **envp)
 // {
+//     t_data *data;
+    
 //     if (!ac || !av)
-//         printf("Error\n");
-//     get_env(envp);
+//         return(1);
+//     data = malloc(sizeof(t_data));
+//     data->env = get_env(envp);
+//     t_pair *temp;
+//     while (data->env)
+//     {
+//         temp = data->env;
+//         free(data->env->key);
+//         free(data->env->value);
+//         data->env = data->env->next;
+//         free(temp);
+//     }
+//     free(data);
 // }
