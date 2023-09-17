@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:59:30 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/17 00:04:05 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/17 16:29:54 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_dupes(t_pair *env, char *str)
 	temp = env;
 	while (temp)
 	{
-		if (!ft_strncmp(str, temp->key, ft_strlen(temp->key)))
+		if (!ft_strncmp(str, temp->key, ft_strlen(str)))
 			return (1);
 		temp = temp->next;
 	}
@@ -31,17 +31,13 @@ void	add_to_list(char *str, t_pair *exported_vars)
 	t_pair	*temp;
 
 	temp = exported_vars;
-	if (!temp->key)
+	if (temp->key)
 	{
-		temp->key = ft_strdup(str);
-		temp->value = NULL;
-		temp->next = NULL;
-		return ;
-	}
-	while (temp->next)
+		while (temp->next)
+			temp = temp->next;
+		temp->next = malloc(sizeof(t_pair));
 		temp = temp->next;
-	temp->next = malloc(sizeof(t_pair));
-	temp = temp->next;
+	}
 	if (!ft_strchr(str, '='))
 	{
 		temp->key = ft_strdup(str);
@@ -63,7 +59,10 @@ int	replace_var(t_pair *env, char *str)
 	while (temp)
 	{
 		if (!ft_strncmp(str, temp->key, get_length_to_char(str, '=')))
+		{
+			free(temp->value);
 			temp->value = ft_strdup(ft_strchr(str, '=') + 1);
+		}
 		temp = temp->next;
 	}
 	return (0);
@@ -131,7 +130,7 @@ void	print_sorted_all(t_pair *env, t_pair *exported_vars)
 
 int	export(t_pair *env, t_pair *exported_vars, char **str)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	if (!str)
@@ -141,6 +140,12 @@ int	export(t_pair *env, t_pair *exported_vars, char **str)
 	}
 	while (str[++i])
 	{
+		if (!ft_isalnum(*str[i]) && *str[i] != '_')
+		{
+			ft_putstr_fd("minishell: export: `", 2);
+			ft_putstr_fd(str[i], 2);
+			ft_putendl_fd("' : not a valid identifier", 2);
+		}
 		if (!ft_strchr(str[i], '='))
 		{
 			if (!check_dupes(env, str[i]))
@@ -148,7 +153,7 @@ int	export(t_pair *env, t_pair *exported_vars, char **str)
 		}
 		else
 		{
-			if (check_dupes(env, str[i]))
+			if (!check_dupes(env, str[i]))
 				replace_var(env, str[i]);
 			else
 				add_to_list(str[i], exported_vars);

@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 11:57:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/16 18:09:29 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/17 11:40:48 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	check_unexpected_token(char *str)
 		i++;
 	if (str[i] && ft_strchr("<>|", str[i]))
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token '", 2);
+		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 		ft_putchar_fd(str[i], 2);
 		ft_putendl_fd("'", 2);
 		return (1);

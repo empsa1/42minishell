@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:56:07 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/16 19:57:35 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/17 22:18:35 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,14 @@ void print_pairs(t_pair *pair)
 	t_pair *temp;
 	
 	temp = pair;
+	if (!temp->value)
+		return;
 	while (temp)
 	{
-		printf("%s%s\n", temp->key, temp->value);
+		if (temp->value)
+			printf("%s%s\n", temp->key, temp->value);
+		else
+			printf("%s\n", temp->key);
 		temp = temp->next;
 	}
 }

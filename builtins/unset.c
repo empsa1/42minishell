@@ -6,43 +6,60 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 17:43:40 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/14 09:50:23 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/17 22:20:48 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	get_key_size(char *str)
+size_t len_to_char(char *str, char c)
 {
-	int	i;
+	int len;
 
-	i = 0;
-	while (str[i] != '=')
-		i++;
-	return (i);
-}
-
-void	check_env(t_node *cur_node, t_node *prev_node, char *str)
-{
-	while (cur_node)
+	len = 0;
+	if (!str)
+		return(0);
+	while (str[len])
 	{
-		if ((int)ft_strlen(str) == get_key_size(cur_node->content)
-			&& !ft_strncmp(cur_node->content, str, ft_strlen(str)))
-		{
-			free(cur_node->content);
-			prev_node->next = cur_node->next;
-			free(cur_node);
-			return ;
-		}
-		prev_node = cur_node;
-		cur_node = cur_node->next;
+		if (str[len] == c)
+			return(len);
+		len++;
 	}
+	return(len);
 }
 
-int	unset(t_data *data, char *str)
+int	remove_from_list(char *str, t_pair *pair)
 {
-	t_node	*prev_node;
-	t_node	*cur_node;
+	t_pair	*prev;
+	t_pair *cur;
+
+	cur = pair;
+	prev = NULL;
+	while (cur)
+	{
+		if (ft_strlen(str) == len_to_char(cur->key, '=') && !ft_strncmp(str, cur->key, ft_strlen(str)))
+		{
+			printf("removing %s\n", str);
+			if (!prev)
+				pair = pair->next;
+			else
+				prev->next = cur->next;
+				printf("should free %s\n", cur->key);
+			free(cur->key);
+			free(cur->value);
+			free(cur);
+			return (1);
+		}
+		prev = cur;
+		cur = cur->next;
+	}
+	return(0);
+}
+
+int	unset(t_data *data, char **str)
+{
+	t_pair	*prev_node;
+	t_pair	*cur_node;
 	int		i;
 
 	prev_node = NULL;
@@ -52,17 +69,15 @@ int	unset(t_data *data, char *str)
 		return (0);
 	while (str[++i])
 	{
-		if (!ft_isalnum(str[i]))
+		if (!ft_isalnum(*str[i]) && *str[i] != '_' || ft_strchr(str[i], '='))
 		{
-			if (str[i] != '_')
-			{
-				ft_putstr_fd("unset: ", 2);
-				ft_putstr_fd(str, 2);
-				ft_putendl_fd(": invalid parameter name", 2);
-				return (1);
-			}
+			ft_putstr_fd("unset: ", 2);
+			ft_putstr_fd(str[i], 2);
+			ft_putendl_fd(": invalid parameter name", 2);
 		}
+		if (!remove_from_list(str[i], data->exported_vars))
+			if (data->exported_vars->key)
+				remove_from_list(str[i], data->exported_vars);
 	}
-	check_env(cur_node, prev_node, str);
 	return (0);
 }

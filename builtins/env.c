@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 20:32:07 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/16 23:58:30 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/17 11:27:48 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,22 +31,15 @@ int env(t_pair *env, t_pair *exported_vars, char *str)
 		ft_putendl_fd(": too many args", 2);
 		return (-1);
 	}
-	temp = exported_vars;
 	print_pairs(env);
+	temp = exported_vars;
+	if (!temp->key)
+		return (0);
 	while(temp)
 	{
-		if (ft_strchr(temp->key, '=') && *temp->value)
+		if (temp->value)
             printf("%s%s\n", temp->key, temp->value);
 		temp = temp->next;
 	}
-	// print_exported(data->exported_vars);
-	// temp = data->exported_vars;
-	// while (temp)
-	// {
-	// 	printf("%s\n", temp->content);
-	// // if (ft_strchr(temp->content, '='))
-	// // 	printf("%s\n", temp->content);
-	// 	temp = temp->next;
-	// }
 	return (0);
 }

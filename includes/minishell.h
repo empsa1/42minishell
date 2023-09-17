@@ -55,19 +55,19 @@ typedef enum e_token
     END,        // end of command
 }   t_token;
 
-typedef struct s_command
+typedef struct s_arg
 {
     char    *token;
     int     type;
-    struct s_command *next;
-}   t_command;
+    struct s_arg *next;
+}   t_arg;
 
 typedef struct s_command_list
 {
-    char **exec_name;
+    char *exec_name;
     char *exec_path;
-    struct s_commad *command;
-    struct s_command_lis *next;
+    struct s_arg *arg;
+    struct s_command_list *next;
 }   t_command_list;
 
 int create_executor(char *command);
@@ -77,7 +77,7 @@ int	cd(t_data *data, char *str);
 int	expand_path(char *str, char *buf);
 int env(t_pair *env, t_pair *exported_vars, char *str);
 int export(t_pair *env, t_pair *exported_vars, char **str);
-int	unset(t_data *data, char *str);
+int	unset(t_data *data, char **str);
 int pwd(void);
 t_pair *get_env(char **envp);
 void cleanup(t_data *data);
