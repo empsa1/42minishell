@@ -6,11 +6,11 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:00:28 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/13 15:35:16 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/18 19:06:44 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 int check_root(char *str, char *buf)
 {

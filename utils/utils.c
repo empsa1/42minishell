@@ -6,11 +6,11 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:56:07 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/17 22:18:35 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/18 19:06:53 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 int get_length_to_char(char *str, char c)
 {

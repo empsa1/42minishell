@@ -6,11 +6,11 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:00:23 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/17 22:15:33 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/18 19:06:58 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 t_pair	*copy_list(t_pair *env)
 {

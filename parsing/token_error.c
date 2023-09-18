@@ -6,11 +6,29 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 11:57:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/17 11:40:48 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/18 11:25:35 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
+
+int	check_end_of_command(char *str)
+{
+	int	i;
+
+	i = ft_strlen(str);
+	while (str[--i])
+	{
+		if (str[i] == ' ')
+			i--;
+		if (!str[i])
+			break ;
+		if (ft_strchr("<>|", str[i]))
+			return(print_syntax_error(str[i + 1]));
+		else
+			return (0);
+	}
+}
 
 int	check_unexpected_token(char *str)
 {
@@ -20,12 +38,7 @@ int	check_unexpected_token(char *str)
 	while (str[i] == ' ')
 		i++;
 	if (str[i] && ft_strchr("<>|", str[i]))
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-		ft_putchar_fd(str[i], 2);
-		ft_putendl_fd("'", 2);
-		return (1);
-	}
+		return(print_syntax_error(str[i + 1]));
 	return (0);
 }
 
@@ -48,10 +61,11 @@ int	token_error(char *str)
 				return (1);
 		}
 	}
+	check_end_of_command(str);
 }
 
 // int	main(int ac, char **av)
 // {
-// 	if (ac > 0)
-// 		token_error(av[1]);
+// 	if (ac > 1)
+// 		return(token_error(av[1]));
 // }

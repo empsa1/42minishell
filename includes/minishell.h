@@ -14,6 +14,17 @@
 #include <fcntl.h>
 #include "../libft/libft.h"
 
+typedef enum e_token
+{
+    ORDINARY,   // str
+    IN,         // <
+    OUT,        // >
+    HEREDOC,    // <<
+    APPEND,     // >>
+    PIPE,       // |
+    END,        // ; (end of command)
+}   t_token;
+
 typedef struct s_node
 {
     char *content;
@@ -39,22 +50,6 @@ typedef struct s_data
     char cwd[PATH_MAX];
 }   t_data;
 
-
-typedef enum e_token
-{
-    ORDINARY,   // str
-    IN,         // <
-    PIPE,       // |
-    LPR,        // (
-    RPR,        // )
-    SC,         // '
-    DC,         // "
-    OUT,        // >
-    HEREDOC,    // <<
-    APPEND,     // >>
-    END,        // end of command
-}   t_token;
-
 typedef struct s_arg
 {
     char    *token;
@@ -67,6 +62,10 @@ typedef struct s_command_list
     char *exec_name;
     char *exec_path;
     struct s_arg *arg;
+    int stdin;
+    int stdout;
+    int in_fd;
+    int out_fd;
     struct s_command_list *next;
 }   t_command_list;
 
@@ -89,5 +88,7 @@ void print_pairs(t_pair *pair);
 void print_exported(t_node *node);
 void free_pairs(t_pair *pair);
 void	sort_list(t_pair *export);
+int	print_syntax_error(char c);
+int	print_file_error(char *s1, char *s2);
 
 #endif

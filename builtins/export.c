@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:59:30 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/17 16:29:54 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/18 11:20:28 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,11 +141,7 @@ int	export(t_pair *env, t_pair *exported_vars, char **str)
 	while (str[++i])
 	{
 		if (!ft_isalnum(*str[i]) && *str[i] != '_')
-		{
-			ft_putstr_fd("minishell: export: `", 2);
-			ft_putstr_fd(str[i], 2);
-			ft_putendl_fd("' : not a valid identifier", 2);
-		}
+			return(print_syntax_error(*str[i + 1]));
 		if (!ft_strchr(str[i], '='))
 		{
 			if (!check_dupes(env, str[i]))

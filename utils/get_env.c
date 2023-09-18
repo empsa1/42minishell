@@ -6,11 +6,11 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:25:47 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/16 19:53:30 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/18 19:06:49 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 t_pair *get_env(char **envp)
 {

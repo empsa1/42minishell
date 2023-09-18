@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 17:04:01 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/17 22:15:04 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/18 11:36:22 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,6 @@
 
 #include "includes/minishell.h"
 
-int	print_syntax_error(char c)
-{
-	ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-	ft_putchar_fd(c, 2);
-	ft_putendl_fd("'", 2);
-	return (2);
-}
-
 int	check_unclosed(char *str)
 {
 	char	c;
@@ -37,11 +29,9 @@ int	check_unclosed(char *str)
 	while (str[++i])
 	{
 		if (str[i] == ')')
-			return(print_syntax_error(')'));
-		if (str[i] == '"')
-			c = '"';
-		else if (str[i] == '\'')
-			c = '\'';
+			return (print_syntax_error(')'));
+		if (str[i] == '"' || str[i] == '\'')
+			c = str[i];
 		else if (str[i] == '(')
 			c = ')';
 		if (c)
@@ -59,6 +49,6 @@ int	check_unclosed(char *str)
 
 int	main(int ac, char **av)
 {
-	if (ac == 2)
-		check_unclosed(av[1]);
+	if (ac > 1)
+		return (check_unclosed(av[1]));
 }
