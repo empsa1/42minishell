@@ -1,12 +1,13 @@
 OK
 builtins
-    echo / pwd / env
+    echo / pwd / env / export
+get_env
 
 TODO
 builtins
-    check mem leaks
-    export - empty command
-    unset - return value
+    unset
     cd ? - return value
-    expand_path
     exit
+    norminette
+    check mem leaks
+expand_path

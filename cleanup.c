@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 19:52:36 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/13 22:49:02 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/16 23:46:47 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,8 @@
 
 void cleanup(t_data *data)
 {
-    t_node *temp;
 
-    while (data->env)
-    {
-        temp = data->env;
-        free(data->env->content);
-        data->env = data->env->next;
-        free(temp);
-    }
+    free_pairs(data->env);
+    free_pairs(data->exported_vars);
     free(data);
 }
