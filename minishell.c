@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/19 15:03:05 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:28:04 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,10 @@
 //     return (0);
 // }
 
-// int create_executor(char *command)
-// {
-//     if (fork() == 0)
-//     {
-//         signal(SIGINT, sigint_handler);
-//         exec(&command);
-//         kill(getpid(), SIGSEGV);
-//     }
-//     return (0);
-// }
 void	init(t_data *data, char **envp)
 {
 	int	i;
 
-	data->stdin = dup(STDIN_FILENO);
-	data->stdout = dup(STDOUT_FILENO);
-	data->stderr = dup(STDERR_FILENO);
 	i = -1;
 	while (envp[++i])
 	{

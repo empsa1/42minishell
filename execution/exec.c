@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/19 14:56:40 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:41:43 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	open_file(int *fd, char *filename, int flags, int perms)
 {
 	if (*fd != -1)
 		close(*fd);
-	*fd = open(filename, flags, perms);
+	*fd = open(filename, flags | O_CLOEXEC, perms);
 	if (*fd == -1)
 		return (1);
 	return (0);
@@ -87,8 +87,6 @@ int	execute_execve(t_command_list *cmd_lst, char **args)
 	pid = fork();
 	if (pid == -1)
 		ft_putstr_fd("minishell: error forking\n", 2);
-	// if (pid != 0)
-	// close(cmd_lst->out_fd); // CHECK DIS
 	if (pid == 0)
 	{
 		if (execve(cmd_lst->exec_path, args, NULL) == -1)
@@ -170,17 +168,17 @@ int	main(void)
 	arg = arg->next;
 	arg->token = "-w";
 	arg->type = STR;
+	// arg->next = malloc(sizeof(t_arg));
+	// arg = arg->next;
+	// arg->token = "file1";
+	// arg->type = IN;
 	arg->next = malloc(sizeof(t_arg));
 	arg = arg->next;
-	arg->token = "file33";
-	arg->type = IN;
-	arg->next = malloc(sizeof(t_arg));
-	arg = arg->next;
-	arg->token = "-l";
+	arg->token = "file1";
 	arg->type = STR;
 	// arg->next = malloc(sizeof(t_arg));
 	// arg = arg->next;
-	// arg->token = "file4";
+	// arg->token = "file6";
 	// arg->type = 2;
 	arg->next = NULL;
 
@@ -222,6 +220,7 @@ int	main(void)
 	// arg->type = 2;
 	// arg->next = NULL;
 	check_cmd(temp);
+	cmd_lst = temp;
 	while (cmd_lst)
 	{
 		t_command_list *temp_c = cmd_lst;

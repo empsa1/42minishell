@@ -41,9 +41,6 @@ typedef struct s_pair
 typedef struct s_data
 {
 	char					*name;
-	int						stdin;
-	int						stdout;
-	int						stderr;
 	t_pair					*env;
 	t_pair					*exported_vars;
 	char					**path;
@@ -54,7 +51,8 @@ typedef struct s_arg
 {
 	char					*token;
 	int						type;
-}							t_argwc;
+	struct s_arg			*next;
+}							t_arg;
 
 typedef struct s_command_list
 {
