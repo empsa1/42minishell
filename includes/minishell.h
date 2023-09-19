@@ -59,7 +59,6 @@ typedef struct s_arg
 
 typedef struct s_command_list
 {
-    char *exec_name;
     char *exec_path;
     struct s_arg *arg;
     int stdin;
@@ -92,5 +91,6 @@ int	print_syntax_error(char c);
 int	print_file_error(char *s1, char *s2);
 int	token_error(char *str);
 int	check_unclosed(char *str);
+char    *treat_str(char *line);
 
 #endif

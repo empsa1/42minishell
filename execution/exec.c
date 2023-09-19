@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/19 10:56:26 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 14:56:40 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	execute_execve(t_command_list *cmd_lst, char **args)
 			close(cmd_lst->stdin);
 			close(cmd_lst->stdout);
 			ft_putstr_fd("Command '", 2);
-			ft_putstr_fd(cmd_lst->exec_name, 2);
+			ft_putstr_fd(cmd_lst->arg[0].token, 2);
 			ft_putendl_fd("' not found", 2);
 			exit(127);
 		}
@@ -138,12 +138,15 @@ int	check_cmd(t_command_list *cmd_lst)
 			free(arg_list);
 			revert_fds(cmd_lst);
 		}
-		execute_execve(cmd_lst, arg_list);
+		else
+		{
+			execute_execve(cmd_lst, arg_list);
+			free(arg_list);
+			revert_fds(cmd_lst);
+		}
 		// if (is_builtin(cmd_lst->exec_name))
 		//     execute_builtin(cmd_lst);
 		// else
-		free(arg_list);
-		revert_fds(cmd_lst);
 		no_of_forks++;
 		cmd_lst = cmd_lst->next;
 		wait(NULL);
@@ -155,7 +158,6 @@ int	main(void)
 {
 	t_command_list *cmd_lst = (t_command_list *)malloc(sizeof(t_command_list));
 	t_command_list *temp = cmd_lst;
-	cmd_lst->exec_name = "wc";
 	cmd_lst->exec_path = "/usr/bin/wc";
 	cmd_lst->arg = malloc(sizeof(t_arg));
 	cmd_lst->next = NULL;
@@ -170,7 +172,7 @@ int	main(void)
 	arg->type = STR;
 	arg->next = malloc(sizeof(t_arg));
 	arg = arg->next;
-	arg->token = "file1";
+	arg->token = "file33";
 	arg->type = IN;
 	arg->next = malloc(sizeof(t_arg));
 	arg = arg->next;
@@ -184,7 +186,6 @@ int	main(void)
 
 	cmd_lst->next = (t_command_list *)malloc(sizeof(t_command_list));
 	cmd_lst = cmd_lst->next;
-	cmd_lst->exec_name = "echo";
 	cmd_lst->exec_path = "/usr/bin/echo";
 	cmd_lst->arg = malloc(sizeof(t_arg));
 	cmd_lst->next = NULL;
