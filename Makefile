@@ -1,7 +1,12 @@
 NAME = minishell
 
-SRCS =	minishell.c\
+SRCS =	parsing/check_unclosed.c\
+		parsing/token_error.c\
+		minishell.c\
 		signals.c\
+		utils/utils.c\
+		utils/utils2.c\
+		utils/error_printing.c\
 		# execute/exec.c\
 
 OBJS = $(SRCS:.c=.o)

@@ -6,55 +6,59 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/19 06:10:02 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 12:26:55 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "includes/minishell.h"
 
-int create_executor(char *command)
-{
-    if (fork() == 0)
-    {
-        signal(SIGINT, sigint_handler);
-        exec(&command);
-        kill(getpid(), SIGSEGV);
-    }
-    return (0);
-}
+// int create_executor(char *command)
+// {
+//     if (fork() == 0)
+//     {
+//         signal(SIGINT, sigint_handler);
+//         exec(&command);
+//         kill(getpid(), SIGSEGV);
+//     }
+//     return (0);
+// }
 
-void init(t_data *data, char **envp)
+void	init(t_data *data, char **envp)
 {
-    int i;
-    data->stdin = dup(STDIN_FILENO);
-    data->stdout = dup(STDOUT_FILENO);
-    data->stderr = dup(STDERR_FILENO);
-    i = -1;
-    while (envp[++i])
+	int	i;
+
+	data->stdin = dup(STDIN_FILENO);
+	data->stdout = dup(STDOUT_FILENO);
+	data->stderr = dup(STDERR_FILENO);
+	i = -1;
+	while (envp[++i])
 	{
 		if (ft_strnstr(envp[i], "PATH=", 5))
 			data->path = ft_split(&envp[i][5], ':');
 	}
-    getcwd(data->cwd, PATH_MAX);
+	getcwd(data->cwd, PATH_MAX);
 }
 
-int main(int ac, char **av, char **envp)
+int	main(int ac, char **av, char **envp)
 {
-    (void)av;
-    if (ac != 1)
-        return(ft_putstr_fd("Error: Too many arguments\n", 1));
-    t_data data;
-    init(&data, envp);
-    signal(SIGQUIT, SIG_IGN);
-    signal(SIGINT, terminal_prompt);
-    while (1)
-    {
-        char *line = readline("minishell$>");
-        if (line != NULL && *line)
-            add_history(line);
-            if (ft_strtrim(line, " \n\t\r\b") != NULL)
-                    create_executor(parsing(line)); 
-        free(line);
-    }
-    return (0);
+	t_data data;
+	if (ac != 1 || !av[0])
+		return (ft_putstr_fd("Error: Too many arguments\n", 1));
+	init(&data, envp);
+	signal(SIGQUIT, SIG_IGN);
+	// signal(SIGINT, terminal_prompt);
+	while (1)
+	{
+		char *line;
+
+		line = readline("minishell$>");
+		if (line != NULL && *line)
+			add_history(line);
+        if (!check_unclosed(line) && !token_error(line))
+            printf("OK, go on\n");
+		// if (ft_strtrim(line, " \n\t\r\b") != NULL)
+		//         create_executor(parsing(line));
+		free(line);
+	}
+	return (0);
 }

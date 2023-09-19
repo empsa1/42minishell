@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 11:57:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/19 06:09:50 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 12:25:56 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,18 @@ int	check_end_of_command(char *str)
 	int	i;
 
 	i = ft_strlen(str);
-	while (str[--i])
+	i--;
+	while (str[i])
 	{
-		if (str[i] == ' ')
+		while (str[i] == ' ')
 			i--;
 		if (!str[i])
 			break ;
 		if (ft_strchr("<>|", str[i]))
-			return (print_syntax_error(str[i + 1]));
-		else
-			return (0);
+			return (print_parse_error(str[i]));
+		break;
 	}
+	return (0);
 }
 
 int	check_unexpected_token(char *str)
@@ -47,22 +48,20 @@ int	check_unexpected_token(char *str)
 	while (str[i] == ' ')
 		i++;
 	if (str[i] && ft_strchr("<>|", str[i]))
-		return (print_syntax_error(str[i]));
+		return (print_parse_error(str[i]));
 	return (0);
 }
-
-/**
- * @brief TESTE asdasdasd
- * 
- * @param str 
- * @return int 
- */
 
 int	token_error(char *str)
 {
 	int	i;
 
 	i = -1;
+	if (ft_strchr("<>|", *ft_strtrim(str, " ")))
+	{
+		print_parse_error(*str);
+		return(1);
+	}
 	while (str[++i])
 	{
 		if (!ft_strncmp(&str[i], "<<", 2) || !ft_strncmp(&str[i], ">>", 2))
@@ -78,10 +77,11 @@ int	token_error(char *str)
 		}
 	}
 	check_end_of_command(str);
+	return (0);
 }
 
-int	main(int ac, char **av)
-{
-	if (ac > 1)
-		return (token_error(av[1]));
-}
+// int	main(int ac, char **av)
+// {
+// 	if (ac > 1)
+// 		return (token_error(av[1]));
+// }

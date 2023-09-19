@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "includes/minishell.h"
 
 void terminal_prompt()
 {
