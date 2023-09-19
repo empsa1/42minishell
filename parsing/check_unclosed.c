@@ -6,18 +6,18 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 17:04:01 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/18 11:36:22 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 05:49:37 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
- * @brief returns 1 if the string has unclosed quotes or parenthesis;
+ * @brief returns 2 if the string has unclosed quotes or parenthesis;
  *
  * @param str
  * @return int
  */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 int	check_unclosed(char *str)
 {

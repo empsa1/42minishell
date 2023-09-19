@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/18 22:47:43 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 05:26:18 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,27 +160,27 @@ int	main(void)
 {
 	t_command_list *cmd_list = (t_command_list *)malloc(sizeof(t_command_list));
 	t_command_list *temp = cmd_list;
-	cmd_list->exec_name = "cat";
-	cmd_list->exec_path = "/usr/bin/cat";
+	cmd_list->exec_name = "ls";
+	cmd_list->exec_path = "/usr/bin/ls";
 	cmd_list->arg = malloc(sizeof(t_arg));
 	cmd_list->next = NULL;
     cmd_list->in_fd = -1;
     cmd_list->out_fd = -1;
 	t_arg *arg = cmd_list->arg;
-	arg->token = "cat";
+	arg->token = "ls";
 	arg->type = 0;
 	arg->next = malloc(sizeof(t_arg));
 	arg = arg->next;
-	arg->token = "file";
+	arg->token = "-l";
 	arg->type = 0;
 	arg->next = malloc(sizeof(t_arg));
 	arg = arg->next;
-	arg->token = "file";
+	arg->token = "..";
 	arg->type = 0;
 	arg->next = malloc(sizeof(t_arg));
 	arg = arg->next;
 	arg->token = "file3";
-	arg->type = 1;
+	arg->type = 2;
 	arg->next = NULL;
 
 	cmd_list->next = (t_command_list *)malloc(sizeof(t_command_list));

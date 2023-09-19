@@ -90,5 +90,7 @@ void free_pairs(t_pair *pair);
 void	sort_list(t_pair *export);
 int	print_syntax_error(char c);
 int	print_file_error(char *s1, char *s2);
+int	token_error(char *str);
+int	check_unclosed(char *str);
 
 #endif

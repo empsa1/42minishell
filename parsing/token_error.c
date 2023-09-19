@@ -6,11 +6,20 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 11:57:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/18 11:25:35 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 06:09:50 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
+
+/**
+
+	* @brief Returns 2 if there are two special tokens without any strings in 
+	between, or a special token at end of command;
+ *
+ * @param str
+ * @return int
+ */
 
 int	check_end_of_command(char *str)
 {
@@ -24,7 +33,7 @@ int	check_end_of_command(char *str)
 		if (!str[i])
 			break ;
 		if (ft_strchr("<>|", str[i]))
-			return(print_syntax_error(str[i + 1]));
+			return (print_syntax_error(str[i + 1]));
 		else
 			return (0);
 	}
@@ -38,9 +47,16 @@ int	check_unexpected_token(char *str)
 	while (str[i] == ' ')
 		i++;
 	if (str[i] && ft_strchr("<>|", str[i]))
-		return(print_syntax_error(str[i + 1]));
+		return (print_syntax_error(str[i]));
 	return (0);
 }
+
+/**
+ * @brief TESTE asdasdasd
+ * 
+ * @param str 
+ * @return int 
+ */
 
 int	token_error(char *str)
 {
@@ -64,8 +80,8 @@ int	token_error(char *str)
 	check_end_of_command(str);
 }
 
-// int	main(int ac, char **av)
-// {
-// 	if (ac > 1)
-// 		return(token_error(av[1]));
-// }
+int	main(int ac, char **av)
+{
+	if (ac > 1)
+		return (token_error(av[1]));
+}
