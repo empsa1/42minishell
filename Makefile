@@ -2,6 +2,7 @@ NAME = minishell
 
 SRCS =	parsing/check_unclosed.c\
 		parsing/token_error.c\
+		parsing/parsing.c\
 		minishell.c\
 		signals.c\
 		utils/utils.c\
@@ -32,7 +33,7 @@ $(LIBFT):
 	mv libft/$(LIBFT) .
 	$(MAKE) -C libft clean
 
-clean:
+lean:
 	@echo "removing ./minishell."
 	@rm -f $(NAME)
 

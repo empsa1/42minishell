@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 17:04:01 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/19 13:22:22 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:07:22 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ int	check_unclosed(char *str)
 	return (0);
 }
 
-int	main(int ac, char **av)
-{
-	if (ac > 1)
-		return (check_unclosed(av[1]));
-}
+// int	main(int ac, char **av)
+// {
+// 	if (ac > 1)
+// 		return (check_unclosed(av[1]));
+// }

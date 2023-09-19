@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/19 12:26:55 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:03:05 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,16 @@
 //     return (0);
 // }
 
+// int create_executor(char *command)
+// {
+//     if (fork() == 0)
+//     {
+//         signal(SIGINT, sigint_handler);
+//         exec(&command);
+//         kill(getpid(), SIGSEGV);
+//     }
+//     return (0);
+// }
 void	init(t_data *data, char **envp)
 {
 	int	i;
@@ -41,24 +51,31 @@ void	init(t_data *data, char **envp)
 
 int	main(int ac, char **av, char **envp)
 {
-	t_data data;
-	if (ac != 1 || !av[0])
-		return (ft_putstr_fd("Error: Too many arguments\n", 1));
-	init(&data, envp);
-	signal(SIGQUIT, SIG_IGN);
-	// signal(SIGINT, terminal_prompt);
-	while (1)
-	{
-		char *line;
+    (void)av;
+    if (ac != 1)
+        return(ft_putstr_fd("Error: Too many arguments\n", 1));
+    t_data data;
+    int i = 0;
+    init(&data, envp);
+    // signal(SIGQUIT, SIG_IGN);
+    // signal(SIGINT, terminal_prompt);
+    while (1)
+    {
+        char *line = readline("minishell$>");
+        if (line != NULL && *line)
+        {
+            add_history(line);
 
-		line = readline("minishell$>");
-		if (line != NULL && *line)
-			add_history(line);
-        if (!check_unclosed(line) && !token_error(line))
-            printf("OK, go on\n");
-		// if (ft_strtrim(line, " \n\t\r\b") != NULL)
-		//         create_executor(parsing(line));
-		free(line);
-	}
-	return (0);
+            char **newstring = ft_split(treat_str(line), 2);
+            while (newstring[i])
+            {
+                printf("String: %s\n", newstring[i]);
+                i++;
+            }
+            free(line);
+
+        }
+                    //create_executor(parsing(line)); 
+    }
+    return (0);
 }
