@@ -14,16 +14,16 @@
 #include <fcntl.h>
 #include "../libft/libft.h"
 
-typedef enum e_token
+enum tokens
 {
-    ORDINARY,   // str
+    STR,   // str
     IN,         // <
     OUT,        // >
-    HEREDOC,    // <<
     APPEND,     // >>
+    HEREDOC,    // <<
     PIPE,       // |
     END,        // ; (end of command)
-}   t_token;
+};
 
 typedef struct s_node
 {
