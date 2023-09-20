@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/20 15:58:48 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/20 17:16:51 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,14 +217,6 @@ int check_cmd(t_command_list *cmd_lst, t_pipe *pipes)
 
 int main(void)
 {
-	t_data data;
-	data.pipes.open = 0;
-	// pipe(data.pipes.fd);
-	data.pipes.next = malloc(sizeof(t_pipe));
-	data.pipes.next->open = 0;
-	data.pipes.next->next = &data.pipes;
-	// pipe(data.pipes.next->fd);
-	// fprintf(stderr, "pipes open: %d %d %d %d\n", data.pipes.fd[0], data.pipes.fd[1], data.pipes.next->fd[0], data.pipes.next->fd[1]);
 	t_command_list *cmd_lst = (t_command_list *)malloc(sizeof(t_command_list));
 	t_command_list *temp = cmd_lst;
 	cmd_lst->exec_path = "/usr/bin/ls";
