@@ -1,5 +1,29 @@
 #include "minishell.h"
 
+int token(char *line, int i)
+{
+    if (line[i] == '|')
+        return PIPE;
+    if (line[i] == '>')
+    {
+        if (line[i + 1] && line[i + 1]  == '>')
+            return (APPEND);
+        else
+            return (OUT);
+    }
+    if (line[i] == '<')
+    {
+        if (line[i + 1] && line[i + 1] == '<')
+            return (HEREDOC);
+        else
+            return (IN);
+    }
+    if (line[i] == ';')
+        return (END);
+    else
+        return (STR);
+}
+
 char    *treat_str(char *line)
 {
     int i;
@@ -39,31 +63,46 @@ char    *treat_str(char *line)
     newline[j] = 0;
     return (newline);
 }
-//echo "dsgasd ' fdsf 'fds daf"dfadf"    dddw"
-// void    parsing(char *line)
-// {
-//     int i;
-//     char **cmd;
-//     t_command_list cmd_lst;
 
-//     i = 1;
-//     cmd = ft_split(treat_str(line));
+int ft_strleni(char **splitter, int i)
+{
+    int size;
 
-//     while (cmd[i])
-//     {
+    size = 0;
+    while (splitter[i++] != NULL)
+        size++;
+    return (size);
+}
+
+void parsing(t_command_list *cmd_lst, char **splitter, int i)
+{
+
+    cmd_lst = malloc(sizeof(t_command_list));
+    cmd_lst->arg = malloc(sizeof(t_argwc) * ft_strleni(splitter, i));
+    // if (!is_valid_command(splitter[i++]))
+    //     exit(-1);
+    cmd_lst->arg[0].token = splitter[0];
+    cmd_lst->arg[0].type = token(splitter[0], 0);
+    while (splitter[i] && !zcmp(splitter[i], "|") && !zcmp(splitter[i], ";"))
+    {
+        cmd_lst->arg[i].token = splitter[i];
+        cmd_lst->arg[i].type = token(splitter[i], 0);
+        i++;
         
-//     }
-// }
+    }
+    //debug(NULL, NULL, &cmd_lst);
+    if (zcmp(splitter[i], "|"))
+    {
+        t_command_list *cmd_newlst;
+        cmd_lst->next = cmd_newlst;
+        parsing(cmd_newlst, splitter, i);
+    }
+    if (zcmp(splitter[i], ";"))
+    {
+        cmd_lst->next = NULL;
+        return ;
+    }
+    cmd_lst->next = NULL;
+}
 
-// int main(int argc, char **argv)
-// {
-//     int i = 0;
-//     printf("Line to be treated: %s\n", argv[1]);
-//     char **newstring = ft_split(treat_str(argv[1]), 2);
-//     while (newstring[i])
-//     {
-//         printf("String: %s\n", newstring[i]);
-//         i++;
-//     }
-//     printf("Line treated: %s\n",treat_str(argv[1]));
-// }
+//{Tester 1} echo "dsgasd ' fdsf 'fds daf"dfadf"    dddw"
