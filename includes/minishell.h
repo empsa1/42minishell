@@ -67,6 +67,10 @@ typedef struct s_command_list
 	struct s_command_list	*next;
 }							t_command_list;
 
+
+int 						zcmp(char *str, char *cmp);
+void    					free_all(t_command_list *cmd_lst, char *line, char *changes, char **splitter);
+void 						parsing(t_command_list *cmd_lst, char **splitter, int i);
 int							create_executor(char *command);
 void						sigint_handler(int signal);
 int							exec(char **str);

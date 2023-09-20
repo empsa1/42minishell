@@ -8,10 +8,10 @@ int zcmp(char *str, char *cmp)
     while (str[i] != '\0' && cmp[i] != '\0')
     {
         if (str[i] != cmp[i])
-            return 1;
+            return 0;
         i++;
     }
     if (str[i] != '\0' || cmp[i] != '\0')
-        return 1;
-    return 0;
+        return 0;
+    return 1;
 }
