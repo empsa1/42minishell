@@ -55,13 +55,13 @@ int do_pipes(t_command_list *cmd_lst, t_pipe *pipes)
 	// close(pipes->fd[0]);
 	if (cmd_lst->out_fd == -1)
 	{
-		fprintf(stderr, "write to %d\n", pipes->fd[1]);
-		pipes = pipes->next;
+		fprintf(stderr, "write to pipefd %d\n", pipes->fd[1]);
 		cmd_lst->out_fd = pipes->fd[1];
 	}
 	if (cmd_lst->in_fd == -1)
 	{
-		fprintf(stderr, "read from %d\n", pipes->next->fd[0]);
+		pipes = pipes->next;
+		fprintf(stderr, "read from pipfd %d\n", pipes->next->fd[0]);
 		cmd_lst->in_fd = pipes->next->fd[0];
 	}
 	pipes->open = 1;
@@ -97,13 +97,15 @@ int check_fds(t_command_list *cmd_lst, t_pipe *pipes)
 	}
 	if (cmd_lst->in_fd != -1)
 	{
-		fprintf(stderr, "dupinh STDIN to %d\n", cmd_lst->in_fd);
+		fprintf(stderr, "duping STDIN to %d\n", cmd_lst->in_fd);
 		dup2(cmd_lst->in_fd, STDIN_FILENO);
+		close(cmd_lst->in_fd);
 	}
 	if (cmd_lst->out_fd != -1)
 	{
-		fprintf(stderr, "dupinh STDOUT to %d\n", cmd_lst->out_fd);
+		fprintf(stderr, "duping STDOUT to %d\n", cmd_lst->out_fd);
 		dup2(cmd_lst->out_fd, STDOUT_FILENO);
+		close(cmd_lst->out_fd);
 	}
 	return (0);
 }
@@ -120,6 +122,7 @@ int execute_execve(t_command_list *cmd_lst, char **args, t_pipe *pipes)
 	close(pipes->fd[1]);
 		fprintf(stderr, "closing write pipe: %d\n", pipes->fd[1]);
 	fprintf(stderr, "reading from %d\n", cmd_lst->in_fd);
+	fprintf(stderr, "writing to %d\n", cmd_lst->out_fd);
 	if (pid == 0)
 	{
 		if (execve(cmd_lst->exec_path, args, NULL) == -1)
@@ -143,17 +146,6 @@ int execute_execve(t_command_list *cmd_lst, char **args, t_pipe *pipes)
 
 void revert_fds(t_command_list *cmd_lst)
 {
-	if (cmd_lst->in_fd != -1)
-	{
-
-		fprintf(stderr, "reverting stdin to %d\n", cmd_lst->stdin);
-		close(cmd_lst->in_fd);
-	}
-	if (cmd_lst->out_fd != -1)
-	{
-		fprintf(stderr, "reverting stdout to %d\n", cmd_lst->stdout);
-		close(cmd_lst->out_fd);
-	}
 	dup2(cmd_lst->stdin, STDIN_FILENO);
 	close(cmd_lst->stdin);
 	dup2(cmd_lst->stdout, STDOUT_FILENO);
@@ -203,13 +195,13 @@ int main(void)
 	fprintf(stderr, "pipes open: %d %d %d %d\n", data.pipes.fd[0], data.pipes.fd[1], data.pipes.next->fd[0], data.pipes.next->fd[1]);
 	t_command_list *cmd_lst = (t_command_list *)malloc(sizeof(t_command_list));
 	t_command_list *temp = cmd_lst;
-	cmd_lst->exec_path = "/usr/bin/wc";
+	cmd_lst->exec_path = "/usr/bin/echo";
 	cmd_lst->arg = malloc(sizeof(t_arg));
 	cmd_lst->next = NULL;
 	cmd_lst->in_fd = -1;
 	cmd_lst->out_fd = -1;
 	t_arg *arg = cmd_lst->arg;
-	arg->token = "wc";
+	arg->token = "echo";
 	arg->type = STR;
 	arg->next = malloc(sizeof(t_arg));
 	arg = arg->next;
@@ -252,20 +244,26 @@ int main(void)
 	// arg2->token = "file4";
 	// arg2->type = 2;
 	arg2->next = NULL;
+
+	cmd_lst->next = (t_command_list *)malloc(sizeof(t_command_list));
+	cmd_lst = cmd_lst->next;
+	cmd_lst->exec_path = "/usr/bin/cat";
+	cmd_lst->arg = malloc(sizeof(t_arg));
 	cmd_lst->next = NULL;
-	// arg->next = malloc(sizeof(t_arg));
-	// arg = arg->next;
-	// // arg->token = "file";
-	// // arg->type = 1;
-	// // arg->next = malloc(sizeof(t_arg));
-	// // arg = arg->next;
-	// // arg->token = "filerror";
-	// // arg->type = 1;
-	// arg->next = malloc(sizeof(t_arg));
-	// arg = arg->next;
-	// arg->token = "file2";
-	// arg->type = 2;
-	// arg->next = NULL;
+	cmd_lst->in_fd = -1;
+	cmd_lst->out_fd = -1;
+	t_arg *arg3 = cmd_lst->arg;
+	arg3->token = "cat";
+	arg3->type = STR;
+	arg3->next = malloc(sizeof(t_arg));
+	arg3 = arg3->next;
+	arg3->token = "file44";
+	arg3->type = OUT;
+	arg3->next = malloc(sizeof(t_arg));
+	arg3 = arg3->next;
+	arg3->token = "echo result";
+	arg3->type = PIPE;
+	cmd_lst->next = NULL;
 	check_cmd(temp, &data.pipes);
 	while (cmd_lst)
 	{
