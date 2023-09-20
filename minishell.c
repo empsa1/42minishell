@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/20 17:16:36 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/20 17:27:18 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ void	init(t_data *data, char **envp)
 		if (ft_strnstr(envp[i], "PATH=", 5))
 			data->path = ft_split(&envp[i][5], ':');
 	}
-    data->pipes->open = 0;
-	data->pipes->next = malloc(sizeof(t_pipe));
-	data->pipes->next->open = 0;
-	data->pipes->next->next = &data.pipes;
+    data->pipes.open = 0;
+	data->pipes.next = malloc(sizeof(t_pipe));
+	data->pipes.next->open = 0;
+	data->pipes.next->next = &data->pipes;
 	getcwd(data->cwd, PATH_MAX);
 }
 
@@ -62,7 +62,7 @@ int	main(int ac, char **av, char **envp)
             changes = treat_str(line);
             splitter = ft_split(changes, 2);
             parsing(&cmd_lst, splitter, 0);
-            exec(cmd_lst.arg);
+            // check_cmd(&cmd_lst, &data.pipes);
             // printf("%s\n", cmd_lst->arg->token);
             //debug(splliter, changes, NULL);
             //create_executor(parsing(line));

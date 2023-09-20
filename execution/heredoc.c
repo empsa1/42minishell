@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 15:38:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/20 16:07:44 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/20 17:23:38 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int mini_heredoc()
 {
     if (unlink("../help") == -1)
         printf("Error removing temp file\n");
-    int pid;
     char *eof = "pqp";
     char *heredoc = "";
     char *eofile = ft_strjoin(eof, "\0");

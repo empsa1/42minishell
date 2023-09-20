@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/20 17:16:51 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/20 17:24:17 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,20 @@ char **get_arg_list(t_arg *arg)
 
 	temp = arg;
 	len = 0;
-	while (temp)
+	while (temp->type != END)
 	{
 		if (temp->type == 0)
 			len++;
-		temp = temp->next;
+		temp++;
 	}
 	arg_list = (char **)ft_calloc(len + 1, sizeof(char *));
 	i = 0;
 	temp = arg;
-	while (temp)
+	while (temp->type != END)
 	{
 		if (temp->type == 0)
 			arg_list[i++] = temp->token;
-		temp = temp->next;
+		temp++;
 	}
 	return (arg_list);
 }
@@ -85,7 +85,7 @@ int check_fds(t_command_list *cmd_lst, t_pipe *pipes)
 
 	fprintf(stderr, "*********Checking fds for command %s********\n", cmd_lst->arg->token);
 	temp = cmd_lst->arg;
-	while (temp)
+	while (temp->type != END)
 	{
 		if (temp->type == PIPE)
 			do_pipes(cmd_lst, pipes);
@@ -112,7 +112,7 @@ int check_fds(t_command_list *cmd_lst, t_pipe *pipes)
 						  O_CREAT | O_RDWR | O_TRUNC, 0664))
 				return (print_file_error("minishell: ", temp->token));
 		}
-		temp = temp->next;
+		temp++;
 	}
 	if (cmd_lst->in_fd != -1)
 	{
@@ -215,120 +215,120 @@ int check_cmd(t_command_list *cmd_lst, t_pipe *pipes)
 	return (0);
 }
 
-int main(void)
-{
-	t_command_list *cmd_lst = (t_command_list *)malloc(sizeof(t_command_list));
-	t_command_list *temp = cmd_lst;
-	cmd_lst->exec_path = "/usr/bin/ls";
-	cmd_lst->arg = malloc(sizeof(t_arg));
-	cmd_lst->next = NULL;
-	cmd_lst->in_fd = -1;
-	cmd_lst->out_fd = -1;
-	t_arg *arg = cmd_lst->arg;
-	arg->token = "ls";
-	arg->type = STR;
-	// arg->next = malloc(sizeof(t_arg));
-	// arg = arg->next;
-	// arg->token = "-c";
-	// arg->type = STR;
-	arg->next = malloc(sizeof(t_arg));
-	arg = arg->next;
-	arg->token = "file1";
-	arg->type = IN;
-	arg->next = malloc(sizeof(t_arg));
-	arg = arg->next;
-	arg->token = "file56";
-	arg->type = PIPE;
-	// arg->next = malloc(sizeof(t_arg));
-	// arg = arg->next;
-	// arg->token = "file4";
-	// arg->type = 2;
-	arg->next = NULL;
+// int main(void)
+// {
+// 	t_command_list *cmd_lst = (t_command_list *)malloc(sizeof(t_command_list));
+// 	t_command_list *temp = cmd_lst;
+// 	cmd_lst->exec_path = "/usr/bin/ls";
+// 	cmd_lst->arg = malloc(sizeof(t_arg));
+// 	cmd_lst->next = NULL;
+// 	cmd_lst->in_fd = -1;
+// 	cmd_lst->out_fd = -1;
+// 	t_arg *arg = cmd_lst->arg;
+// 	arg->token = "ls";
+// 	arg->type = STR;
+// 	// arg->next = malloc(sizeof(t_arg));
+// 	// arg = arg->next;
+// 	// arg->token = "-c";
+// 	// arg->type = STR;
+// 	arg->next = malloc(sizeof(t_arg));
+// 	arg = arg->next;
+// 	arg->token = "file1";
+// 	arg->type = IN;
+// 	arg->next = malloc(sizeof(t_arg));
+// 	arg = arg->next;
+// 	arg->token = "file56";
+// 	arg->type = PIPE;
+// 	// arg->next = malloc(sizeof(t_arg));
+// 	// arg = arg->next;
+// 	// arg->token = "file4";
+// 	// arg->type = 2;
+// 	arg->next = NULL;
 
-	cmd_lst->next = (t_command_list *)malloc(sizeof(t_command_list));
-	cmd_lst = cmd_lst->next;
-	cmd_lst->exec_path = "/usr/bin/grep";
-	cmd_lst->arg = malloc(sizeof(t_arg));
-	cmd_lst->next = NULL;
-	cmd_lst->in_fd = -1;
-	cmd_lst->out_fd = -1;
-	t_arg *arg2 = cmd_lst->arg;
-	arg2->token = "grep";
-	arg2->type = STR;
-	arg2->next = malloc(sizeof(t_arg));
-	arg2 = arg2->next;
-	arg2->token = "u";
-	arg2->type = STR;
-	// arg2->next = malloc(sizeof(t_arg));
-	// arg2 = arg2->next;
-	// arg2->token = "file44";
-	// arg2->type = OUT;
-	arg2->next = malloc(sizeof(t_arg));
-	arg2 = arg2->next;
-	arg2->token = "echo result";
-	arg2->type = PIPE;
-	// arg2->next = malloc(sizeof(t_arg));
-	// arg2 = arg2->next;
-	// arg2->token = "file4";
-	// arg2->type = 2;
-	arg2->next = NULL;
+// 	cmd_lst->next = (t_command_list *)malloc(sizeof(t_command_list));
+// 	cmd_lst = cmd_lst->next;
+// 	cmd_lst->exec_path = "/usr/bin/grep";
+// 	cmd_lst->arg = malloc(sizeof(t_arg));
+// 	cmd_lst->next = NULL;
+// 	cmd_lst->in_fd = -1;
+// 	cmd_lst->out_fd = -1;
+// 	t_arg *arg2 = cmd_lst->arg;
+// 	arg2->token = "grep";
+// 	arg2->type = STR;
+// 	arg2->next = malloc(sizeof(t_arg));
+// 	arg2 = arg2->next;
+// 	arg2->token = "u";
+// 	arg2->type = STR;
+// 	// arg2->next = malloc(sizeof(t_arg));
+// 	// arg2 = arg2->next;
+// 	// arg2->token = "file44";
+// 	// arg2->type = OUT;
+// 	arg2->next = malloc(sizeof(t_arg));
+// 	arg2 = arg2->next;
+// 	arg2->token = "echo result";
+// 	arg2->type = PIPE;
+// 	// arg2->next = malloc(sizeof(t_arg));
+// 	// arg2 = arg2->next;
+// 	// arg2->token = "file4";
+// 	// arg2->type = 2;
+// 	arg2->next = NULL;
 
-	cmd_lst->next = (t_command_list *)malloc(sizeof(t_command_list));
-	cmd_lst = cmd_lst->next;
-	cmd_lst->exec_path = "/usr/bin/grep";
-	cmd_lst->arg = malloc(sizeof(t_arg));
-	cmd_lst->next = NULL;
-	cmd_lst->in_fd = -1;
-	cmd_lst->out_fd = -1;
-	t_arg *arg3 = cmd_lst->arg;
-	arg3->token = "grep";
-	arg3->type = STR;
-	arg3->next = malloc(sizeof(t_arg));
-	arg3 = arg3->next;
-	arg3->token = "lu";
-	arg3->type = STR;
-	// arg3->next = malloc(sizeof(t_arg));
-	// arg3 = arg3->next;
-	// arg3->token = "file44";
-	// arg3->type = OUT;
-	arg3->next = malloc(sizeof(t_arg));
-	arg3 = arg3->next;
-	arg3->token = "echo result";
-	arg3->type = HEREDOC;
-	arg3->next = NULL;
+// 	cmd_lst->next = (t_command_list *)malloc(sizeof(t_command_list));
+// 	cmd_lst = cmd_lst->next;
+// 	cmd_lst->exec_path = "/usr/bin/grep";
+// 	cmd_lst->arg = malloc(sizeof(t_arg));
+// 	cmd_lst->next = NULL;
+// 	cmd_lst->in_fd = -1;
+// 	cmd_lst->out_fd = -1;
+// 	// t_arg *arg3 = cmd_lst->arg;
+// 	// arg3->token = "grep";
+// 	// arg3->type = STR;
+// 	// arg3->next = malloc(sizeof(t_arg));
+// 	// arg3 = arg3->next;
+// 	// arg3->token = "lu";
+// 	// arg3->type = STR;
+// 	// // arg3->next = malloc(sizeof(t_arg));
+// 	// // arg3 = arg3->next;
+// 	// // arg3->token = "file44";
+// 	// // arg3->type = OUT;
+// 	// arg3->next = malloc(sizeof(t_arg));
+// 	// arg3 = arg3->next;
+// 	// arg3->token = "echo result";
+// 	arg3->type = HEREDOC;
+// 	arg3->next = NULL;
 
-	cmd_lst->next = (t_command_list *)malloc(sizeof(t_command_list));
-	cmd_lst = cmd_lst->next;
-	cmd_lst->exec_path = "/usr/bin/wc";
-	cmd_lst->arg = malloc(sizeof(t_arg));
-	cmd_lst->next = NULL;
-	cmd_lst->in_fd = -1;
-	cmd_lst->out_fd = -1;
-	t_arg *arg4 = cmd_lst->arg;
-	arg4->token = "wc";
-	arg4->type = STR;
-	// arg4->next = malloc(sizeof(t_arg));
-	// arg4 = arg4->next;
-	// arg4->token = "24";
-	// arg4->type = STR;
-	arg4->next = malloc(sizeof(t_arg));
-	arg4 = arg4->next;
-	arg4->token = "file";
-	arg4->type = END;
-	arg4->next = NULL;
-	cmd_lst->next = NULL;
+// 	cmd_lst->next = (t_command_list *)malloc(sizeof(t_command_list));
+// 	cmd_lst = cmd_lst->next;
+// 	cmd_lst->exec_path = "/usr/bin/wc";
+// 	cmd_lst->arg = malloc(sizeof(t_arg));
+// 	cmd_lst->next = NULL;
+// 	cmd_lst->in_fd = -1;
+// 	cmd_lst->out_fd = -1;
+// 	t_arg *arg4 = cmd_lst->arg;
+// 	arg4->token = "wc";
+// 	arg4->type = STR;
+// 	// arg4->next = malloc(sizeof(t_arg));
+// 	// arg4 = arg4->next;
+// 	// arg4->token = "24";
+// 	// arg4->type = STR;
+// 	arg4->next = malloc(sizeof(t_arg));
+// 	arg4 = arg4->next;
+// 	arg4->token = "file";
+// 	arg4->type = END;
+// 	arg4->next = NULL;
+// 	cmd_lst->next = NULL;
 
-	check_cmd(temp, &data.pipes);
-	while (cmd_lst)
-	{
-		t_command_list *temp_c = cmd_lst;
-		while (cmd_lst->arg)
-		{
-			t_arg *temp = cmd_lst->arg;
-			cmd_lst->arg = cmd_lst->arg->next;
-			free(temp);
-		}
-		cmd_lst = cmd_lst->next;
-		free(temp_c);
-	}
-}
+// 	check_cmd(temp, &data.pipes);
+// 	while (cmd_lst)
+// 	{
+// 		t_command_list *temp_c = cmd_lst;
+// 		while (cmd_lst->arg)
+// 		{
+// 			t_arg *temp = cmd_lst->arg;
+// 			cmd_lst->arg = cmd_lst->arg->next;
+// 			free(temp);
+// 		}
+// 		cmd_lst = cmd_lst->next;
+// 		free(temp_c);
+// 	}
+// }
