@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bodyflicker <bodyflicker@student.42.fr>    +#+  +:+       +#+        */
+/*   By: anda-cun <anda-cun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/20 11:38:26 by bodyflicker      ###   ########.fr       */
+/*   Updated: 2023/09/20 17:10:58 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ int	main(int ac, char **av, char **envp)
     (void)av;
     char *changes;
     char **splitter;
-    t_command_list *cmd_lst;
+    t_command_list cmd_lst;
+
     if (ac != 1)
         return(ft_putstr_fd("Error: Too many arguments\n", 1));
     t_data data;
@@ -70,10 +71,11 @@ int	main(int ac, char **av, char **envp)
             add_history(line);
             changes = treat_str(line);
             splitter = ft_split(changes, 2);
-            parsing(cmd_lst, splitter, 0);
+            parsing(&cmd_lst, splitter, 0);
+            // printf("%s\n", cmd_lst->arg->token);
             //debug(splliter, changes, NULL);
             //create_executor(parsing(line));
-            free_all(cmd_lst, line, changes, splitter);
+            // free_all(&cmd_lst, line, changes, splitter);
         }
     }
     return (0);

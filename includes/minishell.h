@@ -54,7 +54,7 @@ typedef struct s_arg
 {
 	char					*token;
 	int						type;
-}							t_argwc;
+}							t_arg;
 
 typedef struct s_command_list
 {
