@@ -8,6 +8,8 @@ SRCS =	parsing/check_unclosed.c\
 		utils/utils.c\
 		utils/utils2.c\
 		utils/error_printing.c\
+		utils/utils3.c\
+		utils/cleardata.c\
 		# execute/exec.c\
 
 OBJS = $(SRCS:.c=.o)
