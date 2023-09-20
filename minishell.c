@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anda-cun <anda-cun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/20 17:27:18 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/20 18:39:30 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,9 @@ int	main(int ac, char **av, char **envp)
     (void)av;
     char *changes;
     char **splitter;
-    t_command_list cmd_lst;
+    t_command_list *cmd_lst;
 
+    cmd_lst = malloc(sizeof(t_command_list));
     if (ac != 1)
         return(ft_putstr_fd("Error: Too many arguments\n", 1));
     t_data data;
@@ -61,8 +62,8 @@ int	main(int ac, char **av, char **envp)
             add_history(line);
             changes = treat_str(line);
             splitter = ft_split(changes, 2);
-            parsing(&cmd_lst, splitter, 0);
-            // check_cmd(&cmd_lst, &data.pipes);
+            parsing(cmd_lst, splitter, 0);
+            check_cmd(cmd_lst, &data.pipes);
             // printf("%s\n", cmd_lst->arg->token);
             //debug(splliter, changes, NULL);
             //create_executor(parsing(line));

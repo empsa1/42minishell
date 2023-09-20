@@ -78,8 +78,9 @@ int ft_strleni(char **splitter, int i)
 void parsing(t_command_list *cmd_lst, char **splitter, int i)
 {
     printf("{parsing()} Going to malloc for the struct\n");
-    cmd_lst = malloc(sizeof(t_command_list));
-    cmd_lst->arg = malloc(sizeof(t_arg) * ft_strleni(splitter, i) + 1);
+    // cmd_lst = malloc(sizeof(t_command_list));
+    // cmd_lst->arg = malloc(sizeof(t_arg) * ft_strleni(splitter, i) + 1);
+    cmd_lst->arg = ft_calloc(ft_strleni(splitter, i) +1, sizeof(t_arg));
     printf("{parsing()} success malloc for the struct\n");
     // if (!is_valid_command(splitter[i++]))
     //     exit(-1);

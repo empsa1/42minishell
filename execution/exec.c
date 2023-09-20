@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anda-cun <anda-cun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/20 17:24:17 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/20 19:48:04 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,21 @@ char **get_arg_list(t_arg *arg)
 
 	temp = arg;
 	len = 0;
-	while (temp->type != END)
+	i = 0;
+	while (temp[i].token != NULL)
 	{
-		if (temp->type == 0)
+		if (temp[i].type == 0)
 			len++;
-		temp++;
+		i++;
 	}
 	arg_list = (char **)ft_calloc(len + 1, sizeof(char *));
 	i = 0;
 	temp = arg;
-	while (temp->type != END)
+	while (temp[i].token != NULL)
 	{
-		if (temp->type == 0)
-			arg_list[i++] = temp->token;
-		temp++;
+		if (temp[i].type == 0)
+			arg_list[i] = temp[i].token;
+		i++;
 	}
 	return (arg_list);
 }
@@ -82,37 +83,39 @@ int do_pipes(t_command_list *cmd_lst, t_pipe *pipes)
 int check_fds(t_command_list *cmd_lst, t_pipe *pipes)
 {
 	t_arg *temp;
+	int i;
 
 	fprintf(stderr, "*********Checking fds for command %s********\n", cmd_lst->arg->token);
 	temp = cmd_lst->arg;
-	while (temp->type != END)
+	i = 0;
+	while (temp[i].token != NULL)
 	{
-		if (temp->type == PIPE)
+		if (temp[i].type == PIPE)
 			do_pipes(cmd_lst, pipes);
-		if (temp->type == END)
+		if (temp[i].type == END)
 		{
 			cmd_lst->in_fd = pipes->next->fd[0];
 			cmd_lst->out_fd = cmd_lst->stdout;
 		}
-		if (temp->type == IN)
-			if (open_file(&cmd_lst->in_fd, temp->token, O_RDONLY, 0))
-				return (print_file_error("minishell: ", temp->token));
-		if (temp->type == OUT)
-			if (open_file(&cmd_lst->out_fd, temp->token,
+		if (temp[i].type == IN)
+			if (open_file(&cmd_lst->in_fd, temp[i].token, O_RDONLY, 0))
+				return (print_file_error("minishell: ", temp[i].token));
+		if (temp[i].type == OUT)
+			if (open_file(&cmd_lst->out_fd, temp[i].token,
 						  O_CREAT | O_WRONLY | O_TRUNC, 0664))
-				return (print_file_error("minishell: ", temp->token));
-		if (temp->type == APPEND)
-			if (open_file(&cmd_lst->out_fd, temp->token,
+				return (print_file_error("minishell: ", temp[i].token));
+		if (temp[i].type == APPEND)
+			if (open_file(&cmd_lst->out_fd, temp[i].token,
 						  O_CREAT | O_WRONLY | O_APPEND, 0664))
-				return (print_file_error("minishell: ", temp->token));
-		if (temp->type == HEREDOC)
+				return (print_file_error("minishell: ", temp[i].token));
+		if (temp[i].type == HEREDOC)
 		{
 			mini_heredoc();
 			if (open_file(&cmd_lst->out_fd, "here",
 						  O_CREAT | O_RDWR | O_TRUNC, 0664))
-				return (print_file_error("minishell: ", temp->token));
+				return (print_file_error("minishell: ", temp[i].token));
 		}
-		temp++;
+		i++;
 	}
 	if (cmd_lst->in_fd != -1)
 	{
@@ -122,7 +125,10 @@ int check_fds(t_command_list *cmd_lst, t_pipe *pipes)
 		close(cmd_lst->in_fd);
 	}
 	else
-		printf("next is open? %d\n", pipes->next->open);
+	{
+		cmd_lst->in_fd = cmd_lst->stdin;
+		printf("in_fd: %d\n", cmd_lst->in_fd);
+	}
 	if (cmd_lst->out_fd != -1)
 	{
 		printf("HEEEERE\n");
@@ -131,7 +137,10 @@ int check_fds(t_command_list *cmd_lst, t_pipe *pipes)
 		close(cmd_lst->out_fd);
 	}
 	else
-		printf("No outfd\n");
+	{
+		cmd_lst->out_fd = cmd_lst->stdout;
+		printf("out_fd: %d\n", cmd_lst->out_fd);
+	}
 	return (0);
 }
 
@@ -182,12 +191,19 @@ int check_cmd(t_command_list *cmd_lst, t_pipe *pipes)
 	int no_of_forks;
 
 	no_of_forks = 0;
+	cmd_lst->exec_path = "/usr/bin/echo";
 	while (cmd_lst)
 	{
+		cmd_lst->out_fd = -1;
+		cmd_lst->in_fd = -1;
 		cmd_lst->stdin = dup(STDIN_FILENO);
 		cmd_lst->stdout = dup(STDOUT_FILENO);
 		fprintf(stderr, "original stding: %d, stdout %d\n", cmd_lst->stdin, cmd_lst->stdout);
 		arg_list = get_arg_list(cmd_lst->arg);
+		
+		// int i = 0;
+		// while (arg_list[i])
+		// 	printf("%s\n", arg_list[i]);
 		if (check_fds(cmd_lst, pipes))
 		{
 			free(arg_list);
