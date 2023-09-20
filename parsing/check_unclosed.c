@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 17:04:01 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/19 15:07:22 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 20:17:01 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,40 +21,73 @@
 
 int	check_parenthesis(char *str)
 {
+	char	*tester;
 	int		i;
 	int		j;
-	char	c;
 
-	i = -1;
-	j = 0;
-	c = 0;
-	while (str[++i])
+	i = 0;
+	tester = ft_strdup(str);
+	while (tester[i] == ' ')
+		i++;
+	if (*tester == ')')
+		return (print_syntax_error(')'));
+	while (tester[i])
 	{
-		printf("%c\n", str[i]);
-		if (str[i] == ')')
+		if (tester[i++] == '(')
 		{
-			printf("Here\n");
-			return (print_syntax_error(')'));
-		}
-		if (str[i] == '(')
-		{
-			printf("found (\n");
-			if (j == 0)
-				j = i;
-			while (str[j++])
+			j = i;
+			while (tester[j++])
 			{
-				if (str[j] == ')')
+				if (tester[j] == ')')
 				{
-					printf("found )\n");
-					break ;
+					tester[j] = 2;
+					break;
 				}
-				if (!str[j])
-					printf("ERROR\n");
 			}
 		}
 	}
+	printf("%s\n", tester);
+	free(tester);
 	return (0);
 }
+
+// int	check_parenthesis(char *str)
+// {
+// 	int		i;
+// 	int		j;
+// 	char	c;
+
+// 	i = -1;
+// 	j = 0;
+// 	c = 0;
+// 	while (str[++i])
+// 	{
+// 		printf("checking %c\n", str[i]);
+// 		if (str[i] == ')')
+// 		{
+// 			printf("Here\n");
+// 			return (print_syntax_error(')'));
+// 		}
+// 		if (str[i] == '(')
+// 		{
+// 			printf("found (\n");
+// 			if (j == 0)
+// 				j = i;
+// 			while (str[j++])
+// 			{
+// 				if (str[j] == ')')
+// 				{
+// 					printf("found )\n");
+// 					i++;
+// 					break ;
+// 				}
+// 			}
+// 			if (str[j] != ')')
+// 				return (print_syntax_error(str[j]));
+// 		}
+// 	}
+// 	return (0);
+// }
 
 int	check_unclosed(char *str)
 {
