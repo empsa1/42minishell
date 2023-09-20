@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/19 15:41:43 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 21:22:55 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,26 @@ int	open_file(int *fd, char *filename, int flags, int perms)
 	return (0);
 }
 
-int	check_fds(t_command_list *cmd_lst)
+int	do_pipes(t_command_list *cmd_lst, t_pipe *pipes)
+{
+	close(pipes->fd[0]);
+	if (cmd_lst->out_fd == -1)
+	{
+		printf("write to %d\n", pipes->next->fd[1]);
+		cmd_lst->out_fd = pipes->fd[1];
+	}
+	if (cmd_lst->in_fd == -1)
+	{
+		printf("read from %d\n", pipes->next->fd[0]);
+		cmd_lst->in_fd = pipes->next->fd[0];
+	}
+	pipes->open = 1;
+	pipes = pipes->next;
+	
+	
+}
+
+int	check_fds(t_command_list *cmd_lst, t_pipe *pipes)
 {
 	t_arg	*temp;
 
@@ -71,6 +90,8 @@ int	check_fds(t_command_list *cmd_lst)
 			if (open_file(&cmd_lst->out_fd, "/tmp/here_doc234097",
 					O_CREAT | O_RDWR | O_TRUNC, 0664))
 				return (print_file_error("minishell: ", temp->token));
+		if (temp->type == PIPE)
+			do_pipes(cmd_lst, pipes);
 		if (cmd_lst->in_fd != -1)
 			dup2(cmd_lst->in_fd, STDIN_FILENO);
 		if (cmd_lst->out_fd != -1)
@@ -80,13 +101,15 @@ int	check_fds(t_command_list *cmd_lst)
 	return (0);
 }
 
-int	execute_execve(t_command_list *cmd_lst, char **args)
+int	execute_execve(t_command_list *cmd_lst, char **args, t_pipe *pipes)
 {
 	int	pid;
 
 	pid = fork();
 	if (pid == -1)
 		ft_putstr_fd("minishell: error forking\n", 2);
+	// if (pid != 0)
+	// 	close(pipes->fd[1]);
 	if (pid == 0)
 	{
 		if (execve(cmd_lst->exec_path, args, NULL) == -1)
@@ -120,7 +143,7 @@ void	revert_fds(t_command_list *cmd_lst)
 	close(cmd_lst->stdout);
 }
 
-int	check_cmd(t_command_list *cmd_lst)
+int	check_cmd(t_command_list *cmd_lst, t_pipe *pipes)
 {
 	char	**arg_list;
 	int		no_of_forks;
@@ -131,14 +154,14 @@ int	check_cmd(t_command_list *cmd_lst)
 		cmd_lst->stdin = dup(STDIN_FILENO);
 		cmd_lst->stdout = dup(STDOUT_FILENO);
 		arg_list = get_arg_list(cmd_lst->arg);
-		if (check_fds(cmd_lst))
+		if (check_fds(cmd_lst, pipes))
 		{
 			free(arg_list);
 			revert_fds(cmd_lst);
 		}
 		else
 		{
-			execute_execve(cmd_lst, arg_list);
+			execute_execve(cmd_lst, arg_list, pipes);
 			free(arg_list);
 			revert_fds(cmd_lst);
 		}
@@ -154,6 +177,14 @@ int	check_cmd(t_command_list *cmd_lst)
 
 int	main(void)
 {
+	t_data data;
+	int pip;
+	data.pipes.open = 0;
+	pipe(data.pipes.fd);
+	data.pipes.next = malloc(sizeof(t_pipe));
+	data.pipes.next->open = 0;
+	data.pipes.next->next = &data.pipes;
+	pipe(data.pipes.next->fd);
 	t_command_list *cmd_lst = (t_command_list *)malloc(sizeof(t_command_list));
 	t_command_list *temp = cmd_lst;
 	cmd_lst->exec_path = "/usr/bin/wc";
@@ -162,12 +193,12 @@ int	main(void)
 	cmd_lst->in_fd = -1;
 	cmd_lst->out_fd = -1;
 	t_arg *arg = cmd_lst->arg;
-	arg->token = "wc";
+	arg->token = "ls";
 	arg->type = STR;
-	arg->next = malloc(sizeof(t_arg));
-	arg = arg->next;
-	arg->token = "-w";
-	arg->type = STR;
+	// arg->next = malloc(sizeof(t_arg));
+	// arg = arg->next;
+	// arg->token = "-w";
+	// arg->type = STR;
 	// arg->next = malloc(sizeof(t_arg));
 	// arg = arg->next;
 	// arg->token = "file1";
@@ -175,7 +206,7 @@ int	main(void)
 	arg->next = malloc(sizeof(t_arg));
 	arg = arg->next;
 	arg->token = "file1";
-	arg->type = STR;
+	arg->type = PIPE;
 	// arg->next = malloc(sizeof(t_arg));
 	// arg = arg->next;
 	// arg->token = "file6";
@@ -199,7 +230,7 @@ int	main(void)
 	arg2->next = malloc(sizeof(t_arg));
 	arg2 = arg2->next;
 	arg2->token = "file";
-	arg2->type = STR;
+	arg2->type = PIPE;
 	// arg2->next = malloc(sizeof(t_arg));
 	// arg2 = arg2->next;
 	// arg2->token = "file4";
@@ -219,7 +250,7 @@ int	main(void)
 	// arg->token = "file2";
 	// arg->type = 2;
 	// arg->next = NULL;
-	check_cmd(temp);
+	check_cmd(temp, &data.pipes);
 	cmd_lst = temp;
 	while (cmd_lst)
 	{

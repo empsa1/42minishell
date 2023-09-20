@@ -38,12 +38,20 @@ typedef struct s_pair
 	struct s_pair			*next;
 }							t_pair;
 
+typedef struct s_pipe
+{
+	int						fd[2];
+	int						open;
+	struct s_pipe			*next;
+}							t_pipe;
+
 typedef struct s_data
 {
 	char					*name;
 	t_pair					*env;
 	t_pair					*exported_vars;
 	char					**path;
+	struct s_pipe			pipes;
 	char					cwd[PATH_MAX];
 }							t_data;
 

@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:00:23 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/18 19:06:58 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/19 20:16:23 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,9 @@ t_pair	*copy_list(t_pair *env)
 
 void	print_sorted(t_pair *env)
 {
-	t_pair	*temp_env;
 	t_pair	*export;
 	t_pair	*temp_export;
 
-	temp_env = env;
 	export = copy_list(env);
 	sort_list(export);
 	temp_export = export;
