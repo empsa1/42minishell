@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_unclosed.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: eportela <eportela@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 17:04:01 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/19 20:17:01 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/21 15:27:00 by eportela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  * @return int
  */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 int	check_parenthesis(char *str)
 {
