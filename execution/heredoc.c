@@ -6,30 +6,39 @@
 /*   By: anda-cun <anda-cun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 15:38:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/20 17:23:38 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/21 17:20:12 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int mini_heredoc()
+int mini_heredoc(char *eof)
 {
-    if (unlink("../help") == -1)
-        printf("Error removing temp file\n");
-    char *eof = "pqp";
+    char *str;
+    char *out;
     char *heredoc = "";
     char *eofile = ft_strjoin(eof, "\0");
 
-    int fd = open("help", O_CREAT | O_WRONLY | O_APPEND, 0664);
+    int fd = open("heredoc_163465", O_CREAT | O_WRONLY | O_TRUNC, 0664);
     printf("I-m HEREDORC\n");
-        while (strncmp(heredoc, eofile, 4))
+        while (ft_strncmp(heredoc, eofile, ft_strlen(eofile) + 1))
         {
-            char *out = ft_strjoin(heredoc, "\n");
-            if (heredoc)
-                write(fd, out, ft_strlen(out));
             heredoc = readline("heredoc>");
+            out = ft_strjoin(heredoc, "\n");
+            if (heredoc && ft_strncmp(heredoc, eofile, ft_strlen(eofile) + 1))
+                write(fd, out, ft_strlen(out));
             free(out);
         }
-        close(fd);
+        while ((str = get_next_line(fd)))
+            printf("%s\n", str);
+    close(fd);
+    unlink("heredoc_163465");
     return(0);
+}
+
+int main(int ac, char **av)
+{
+    if (ac < 2)
+        return (1);
+    mini_heredoc(av[1]);
 }

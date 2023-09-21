@@ -106,5 +106,6 @@ int print_parse_error(char c);
 char *treat_str(char *line);
 int mini_heredoc();
 int check_cmd(t_command_list *cmd_lst, t_pipe *pipes);
+char	*get_next_line(int fd);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: anda-cun <anda-cun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/20 19:48:04 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/21 17:30:11 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,7 @@ int check_fds(t_command_list *cmd_lst, t_pipe *pipes)
 						  O_CREAT | O_WRONLY | O_APPEND, 0664))
 				return (print_file_error("minishell: ", temp[i].token));
 		if (temp[i].type == HEREDOC)
-		{
 			mini_heredoc();
-			if (open_file(&cmd_lst->out_fd, "here",
-						  O_CREAT | O_RDWR | O_TRUNC, 0664))
-				return (print_file_error("minishell: ", temp[i].token));
-		}
 		i++;
 	}
 	if (cmd_lst->in_fd != -1)
@@ -191,7 +186,7 @@ int check_cmd(t_command_list *cmd_lst, t_pipe *pipes)
 	int no_of_forks;
 
 	no_of_forks = 0;
-	cmd_lst->exec_path = "/usr/bin/echo";
+	cmd_lst->exec_path = "/usr/bin/ls";
 	while (cmd_lst)
 	{
 		cmd_lst->out_fd = -1;
