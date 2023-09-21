@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anda-cun <anda-cun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 15:38:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/21 17:20:12 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/21 21:32:46 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ int mini_heredoc(char *eof)
     return(0);
 }
 
-int main(int ac, char **av)
-{
-    if (ac < 2)
-        return (1);
-    mini_heredoc(av[1]);
-}
+// int main(int ac, char **av)
+// {
+//     if (ac < 2)
+//         return (1);
+//     mini_heredoc(av[1]);
+// }
