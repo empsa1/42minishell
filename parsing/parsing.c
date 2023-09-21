@@ -1,4 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eportela <eportela@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/21 15:26:24 by eportela          #+#    #+#             */
+/*   Updated: 2023/09/21 15:26:24 by eportela         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+char **expand(char **arr)
+{
+    char **splitter = NULL;
+    int i = 0;
+    while (arr[i])
+    {
+        if (arr[i][0] == '$')
+        
+        i++;
+    }
+    return (splitter);
+}
 
 int token(char *line, int i)
 {
@@ -24,43 +49,69 @@ int token(char *line, int i)
         return (STR);
 }
 
+void    iterator(char *line)
+{
+    int i = 0;
+    while (line[i] != '\0')
+    {
+        printf("Index %d-> {%c}; ", i, line[i]);
+        i++;
+    }
+    printf("\n");
+}
+
+//echo "A B | < > >> << ;   FDASF" | A | B | C | D <<<DEW
+
 char    *treat_str(char *line)
 {
     int i;
     int j = 0;
     char aspas;
     char *newline;
+    i = 0;
+    aspas = 0;
 
     newline = malloc(ft_strlen(line) * 2);
-    i =     -1;
-    aspas = 0;
-    while (line[++i] != '\0')
+    //iterator(line);
+    while (line[i] != '\0')
     {
-        if (!aspas && (line[i] == '"' || line[i] == '\''))
-        {    
+        if (!aspas && line[i] && (line[i] == '"' || line[i] == '\''))
+        {
+            aspas = line[i++];
             newline[j++] = 2;
-            aspas = line[i];
             newline[j++] = aspas;
-        }
-        else if (line[i] == aspas)
-        {   
+            while (line[i] != aspas)
+            {
+                if (line[i] == '\0')
+                {
+                    return ("{ERROR}");
+                }
+                    newline[j++] = line[i];
+                i++;
+            }
             newline[j++] = aspas;
-            newline[j++] = 2;
             aspas = 0;
+            i++;
+        }
+        else if (aspas == 0 && token(line, i) != 0)
+        {
+            newline[j++] = 2;
+            newline[j++] = line[i];
+            if (token(line, i + 1) != 0)
+                newline[j++] = line[++i];
+            newline[j++] = 2;
+            i++;
+        }
+        else if(aspas == 0 && line[i] == ' ')
+        {
+            newline[j++] = 2;
+            i++;
         }
         else
-        {
-            if (aspas == 0 && line[i] == ' ')
-            line[i] = 2;
-            if (aspas == 0 && line[i] == '|')
-                newline[j++] = 2;
-            newline[j++] = line[i];
-            if (aspas == 0 && line[i] == '|')
-                newline[j++] = 2;
-        }
-  
+            newline[j++] = line[i++];
+        printf("%c <- %c\n", newline[i - 1], line[i - 1]);
     }
-    newline[j] = 0;
+    newline[j++] = '\0';
     return (newline);
 }
 
@@ -69,50 +120,46 @@ int ft_strleni(char **splitter, int i)
     int size;
 
     size = 0;
-    while (splitter[i] != NULL && !zcmp(splitter[i++], "|"))
+    while (splitter[i] && !z_cmp(splitter[i++], "|"))
         size++;
-    printf("{ft_strleni()} Size result: %d\n}", size);
     return (size);
 }
 
 void parsing(t_command_list *cmd_lst, char **splitter, int i)
 {
-    printf("{parsing()} Going to malloc for the struct\n");
-    // cmd_lst = malloc(sizeof(t_command_list));
-    // cmd_lst->arg = malloc(sizeof(t_arg) * ft_strleni(splitter, i) + 1);
-    cmd_lst->arg = ft_calloc(ft_strleni(splitter, i) +1, sizeof(t_arg));
-    printf("{parsing()} success malloc for the struct\n");
+    int j = 0;
     // if (!is_valid_command(splitter[i++]))
     //     exit(-1);
-    while (splitter[i] && !zcmp(splitter[i], "|") && !zcmp(splitter[i], ";"))
+    while (splitter[i] && !z_cmp(splitter[i], "|") && !z_cmp(splitter[i], ";"))
     {
-        printf("{parsing()} Inside loop!\n");
-        cmd_lst->arg[i].token = splitter[i];
-        cmd_lst->arg[i].type = token(splitter[i], 0);
-        printf("{parsing()} Token Argument: %s\n{parsing()} Token Type: %d\n",cmd_lst->arg[i].token, cmd_lst->arg[i].type);
-        i++; 
+        if (token(splitter[i], 0) != 0 && splitter[i + 1])
+        {
+            cmd_lst->arg[j].token = splitter[i + 1];
+            cmd_lst->arg[j].type = token(splitter[i], 0);
+            printf("%d %s\n",cmd_lst->arg[j].type, cmd_lst->arg[j].token);
+            i++;
+        }
+        else
+        {
+            cmd_lst->arg[j].token = splitter[i];
+            cmd_lst->arg[j].type = token(splitter[i], 0);
+        }
+        j++;
+        i++;
     }
-    //debug(NULL, NULL, &cmd_lst);
-    printf("{parsing()} Out of the loop\n");
-    if (splitter[i] && zcmp(splitter[i], "|"))
+    if (splitter[i] && z_cmp(splitter[i], "|"))
     {
-        printf("{parsing()} Inside Pipe Condition!\n");
         t_command_list *cmd_newlst;
-        cmd_newlst = NULL;
+        cmd_newlst = malloc(sizeof(t_command_list));
+        cmd_newlst->arg = malloc(sizeof(t_arg) * ft_strleni(splitter, ++i));
         cmd_lst->next = cmd_newlst;
-        printf("{parsing()} Going parsing again\n");
-        parsing(cmd_newlst, splitter, ++i);
+        parsing(cmd_newlst, splitter, i);
     }
-    else if (splitter[i] && zcmp(splitter[i], ";"))
+    else if (splitter[i] && z_cmp(splitter[i], ";"))
     {
-        printf("{parsing()} Inside END Condition!\n");
         cmd_lst->next = NULL;
         return ;
-    }else{
-    printf("{parsing()} Going to assign NULL to next since the parsing ended\n");
-    cmd_lst->next = NULL;
-    printf("{parsing()} NULL was assigned leaving parsing()\n");
     }
+    else
+        cmd_lst->next = NULL;
 }
-
-//{Tester 1} echo "dsgasd ' fdsf 'fds daf"dfadf"    dddw"

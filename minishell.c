@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: eportela <eportela@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/20 18:39:30 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/21 17:48:49 by eportela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "minishell.h"
 
 // int create_executor(char *command)
 // {
@@ -43,8 +43,8 @@ void	init(t_data *data, char **envp)
 int	main(int ac, char **av, char **envp)
 {
     (void)av;
-    char *changes;
     char **splitter;
+    char *changes;
     t_command_list *cmd_lst;
 
     cmd_lst = malloc(sizeof(t_command_list));
@@ -62,12 +62,22 @@ int	main(int ac, char **av, char **envp)
             add_history(line);
             changes = treat_str(line);
             splitter = ft_split(changes, 2);
+            int j = 0;
+                printf("{main()} Treated: {%s}\n", line); 
+            while (splitter[j])
+            {
+                printf("{main()} Splitter %d: {%s}\n", j, splitter[j]);
+                j++;
+            }
+            cmd_lst = malloc(sizeof(t_command_list));
+            cmd_lst->arg = malloc(sizeof(t_arg) * ft_strleni(splitter, 0));
             parsing(cmd_lst, splitter, 0);
-            check_cmd(cmd_lst, &data.pipes);
+            print_struct(cmd_lst);
+            //check_cmd(cmd_lst, &data.pipes);
             // printf("%s\n", cmd_lst->arg->token);
             //debug(splliter, changes, NULL);
             //create_executor(parsing(line));
-            // free_all(&cmd_lst, line, changes, splitter);
+            //free_all(cmd_lst, line, changes, splitter);
         }
     }
     return (0);
