@@ -71,7 +71,7 @@ int	main(int ac, char **av, char **envp)
 					printf("{main()} Splitter %d: {%s}\n", j, splitter[j]);
 					j++;
 				}
-				cmd_lst->arg = malloc(sizeof(t_arg) * ft_strleni(splitter, 0));
+				cmd_lst->arg = malloc(sizeof(t_arg) * (ft_strleni(splitter, 0) + 1));
 				parsing(cmd_lst, splitter, 0);
 				print_struct(cmd_lst);
                 // check_cmd(&data, cmd_lst, &data.pipes);
