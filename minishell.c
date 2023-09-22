@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/22 05:48:08 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/22 17:14:17 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ void	init(t_data *data, char **envp)
 			data->path = ft_split(&envp[i][5], ':');
 	}
 	data->env = get_env(envp);
-	data->pipes.open = 0;
+    data->exit_status = 0;
 	data->pipes.next = malloc(sizeof(t_pipe));
-	data->pipes.next->open = 0;
 	data->pipes.next->next = &data->pipes;
+    data->heredoc = 0;
 	getcwd(data->cwd, PATH_MAX);
 }
 
@@ -71,10 +71,10 @@ int	main(int ac, char **av, char **envp)
 					printf("{main()} Splitter %d: {%s}\n", j, splitter[j]);
 					j++;
 				}
-				cmd_lst = malloc(sizeof(t_command_list));
 				cmd_lst->arg = malloc(sizeof(t_arg) * ft_strleni(splitter, 0));
 				parsing(cmd_lst, splitter, 0);
-				check_cmd(&data, cmd_lst, &data.pipes);
+				print_struct(cmd_lst);
+                // check_cmd(&data, cmd_lst, &data.pipes);
 				// free_all(cmd_lst, line, changes, splitter);
 			}
             free(line);

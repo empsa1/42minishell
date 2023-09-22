@@ -6,13 +6,13 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 15:38:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/22 06:17:13 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/22 16:33:49 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	mini_heredoc(char *eof)
+int	mini_heredoc(t_data *data, char *eof)
 {
 	char	*out;
 	char	*heredoc;
@@ -22,6 +22,11 @@ int	mini_heredoc(char *eof)
 	heredoc = "";
 	eofile = ft_strjoin(eof, "\0");
 	fd = open("heredoc_163465", O_CREAT | O_WRONLY | O_TRUNC, 0664);
+	if (fd == -1)
+	{
+		return (1);
+	}
+	data->heredoc = 1;
 	printf("heredoc fd: %d\n", fd);
 	while (ft_strncmp(heredoc, eofile, ft_strlen(eofile) + 1))
 	{

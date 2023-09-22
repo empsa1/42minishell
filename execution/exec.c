@@ -6,72 +6,24 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/22 06:15:40 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/22 17:12:06 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	**get_arg_list(t_arg *arg)
-{
-	int		len;
-	int		i;
-	t_arg	*temp;
-	char	**arg_list;
-
-	temp = arg;
-	len = 0;
-	i = 0;
-	while (temp[i].token != NULL)
-	{
-		if (temp[i].type == 0)
-			len++;
-		i++;
-	}
-	arg_list = (char **)ft_calloc(len + 1, sizeof(char *));
-	i = 0;
-	temp = arg;
-	while (temp[i].token != NULL)
-	{
-		if (temp[i].type == 0)
-			arg_list[i] = temp[i].token;
-		i++;
-	}
-	return (arg_list);
-}
-
-int	open_file(int *fd, char *filename, int flags, int perms)
-{
-	if (*fd != -1)
-	{
-		fprintf(stderr, "closed %d\n", *fd);
-		close(*fd);
-	}
-	*fd = open(filename, flags, perms);
-	if (*fd == -1)
-		return (1);
-	fprintf(stderr, "opened \"%s\" on fd %d\n", filename, *fd);
-	return (0);
-}
-
-void	revert_fds(t_command_list *cmd_lst)
-{
-	dup2(cmd_lst->stdin, STDIN_FILENO);
-	close(cmd_lst->stdin);
-	dup2(cmd_lst->stdout, STDOUT_FILENO);
-	close(cmd_lst->stdout);
-}
-
 int	do_pipes(t_command_list *cmd_lst, t_pipe *pipes)
 {
-	printf("doing pipe\n");
-	pipe(pipes->fd);
-	printf("Created pipe r:%d w:%d\n", pipes->fd[0], pipes->fd[1]);
-	if (cmd_lst->out_fd == -1 && cmd_lst->next)
+	if (cmd_lst->next)
 	{
 		pipes->open = 1;
-		fprintf(stderr, "write to pipefd %d\n", pipes->fd[1]);
-		cmd_lst->out_fd = pipes->fd[1];
+		pipe(pipes->fd);
+		printf("Created pipe r:%d w:%d\n", pipes->fd[0], pipes->fd[1]);
+		if (cmd_lst->out_fd == -1)
+		{
+			fprintf(stderr, "write to pipefd %d\n", pipes->fd[1]);
+			cmd_lst->out_fd = pipes->fd[1];
+		}
 	}
 	if (cmd_lst->in_fd == -1 && pipes->next->open == 1)
 	{
@@ -81,72 +33,67 @@ int	do_pipes(t_command_list *cmd_lst, t_pipe *pipes)
 	return (0);
 }
 
-int	check_fds(t_command_list *cmd_lst, t_pipe *pipes)
+int	assign_fds(int in_fd, int out_fd, int stdin, int stdout)
 {
-	t_command_list	*temp;
-	int				i;
+	printf("assign in: %d out: %d\n", in_fd, out_fd);
+	if (in_fd != -1)
+	{
+		fprintf(stderr, "duping STDIN to %d\n", in_fd);
+		dup2(in_fd, STDIN_FILENO);
+		close(in_fd);
+	}
+	else
+	{
+		in_fd = stdin;
+		printf("No in_fd; in_fd: %d\n", in_fd);
+	}
+	if (out_fd != -1)
+	{
+		fprintf(stderr, "duping STDOUT to %d\n", out_fd);
+		dup2(out_fd, STDOUT_FILENO);
+		close(out_fd);
+	}
+	else
+	{
+		out_fd = stdout;
+		fprintf(stderr, "No outr_fd; out_fd: %d\n", out_fd);
+	}
+	return (0);
+}
+
+int	check_fds(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
+{
+	int	i;
 
 	fprintf(stderr, "*********Checking fds for command %s********\n",
 		cmd_lst->arg->token);
-	temp = cmd_lst;
 	i = 0;
-	while (temp)
+	while (cmd_lst->arg[i].token != NULL)
 	{
-		while (cmd_lst->arg[i].token != NULL)
+		if (cmd_lst->next || pipes->next->open)
+			do_pipes(cmd_lst, pipes);
+		if (cmd_lst->arg[i].type == IN)
+			if (open_file(&cmd_lst->in_fd, cmd_lst->arg[i].token, O_RDONLY, 0))
+				return (print_file_error("minishell: ", cmd_lst->arg[i].token));
+		if (cmd_lst->arg[i].type == OUT)
+			if (open_file(&cmd_lst->out_fd, cmd_lst->arg[i].token,
+					O_CREAT | O_WRONLY | O_TRUNC, 0664))
+				return (print_file_error("minishell: ", cmd_lst->arg[i].token));
+		if (cmd_lst->arg[i].type == APPEND)
+			if (open_file(&cmd_lst->out_fd, cmd_lst->arg[i].token,
+					O_CREAT | O_WRONLY | O_APPEND, 0664))
+				return (print_file_error("minishell: ", cmd_lst->arg[i].token));
+		if (cmd_lst->arg[i].type == HEREDOC)
 		{
-			if (cmd_lst->next || pipes->next->open)
-				do_pipes(cmd_lst, pipes);
-			if (cmd_lst->arg[i].type == END)
-			{
-				cmd_lst->in_fd = pipes->next->fd[0];
-				cmd_lst->out_fd = cmd_lst->stdout;
-			}
-			if (cmd_lst->arg[i].type == IN)
-				if (open_file(&cmd_lst->in_fd, cmd_lst->arg[i].token, O_RDONLY,
-						0))
-					return (print_file_error("minishell: ",
-							cmd_lst->arg[i].token));
-			if (cmd_lst->arg[i].type == OUT)
-				if (open_file(&cmd_lst->out_fd, cmd_lst->arg[i].token,
-						O_CREAT | O_WRONLY | O_TRUNC, 0664))
-					return (print_file_error("minishell: ",
-							cmd_lst->arg[i].token));
-			if (cmd_lst->arg[i].type == APPEND)
-				if (open_file(&cmd_lst->out_fd, cmd_lst->arg[i].token,
-						O_CREAT | O_WRONLY | O_APPEND, 0664))
-					return (print_file_error("minishell: ",
-							cmd_lst->arg[i].token));
-			if (cmd_lst->arg[i].type == HEREDOC)
-			{
-				mini_heredoc(cmd_lst->arg[i].token);
-				cmd_lst->in_fd = open("heredoc_163465", O_RDONLY);
-			}
-			i++;
+			if (mini_heredoc(data, cmd_lst->arg[i].token))
+				return (print_file_error("minishell: ", "heredoc"));
+			cmd_lst->in_fd = open("heredoc_163465", O_RDONLY);
 		}
-		if (cmd_lst->in_fd != -1)
-		{
-			fprintf(stderr, "duping STDIN to %d\n", cmd_lst->in_fd);
-			dup2(cmd_lst->in_fd, STDIN_FILENO);
-			close(cmd_lst->in_fd);
-		}
-		else
-		{
-			cmd_lst->in_fd = cmd_lst->stdin;
-			printf("No in_fd; in_fd: %d\n", cmd_lst->in_fd);
-		}
-		if (cmd_lst->out_fd != -1)
-		{
-			fprintf(stderr, "duping STDOUT to %d\n", cmd_lst->out_fd);
-			dup2(cmd_lst->out_fd, STDOUT_FILENO);
-			close(cmd_lst->out_fd);
-		}
-		else
-		{
-			cmd_lst->out_fd = cmd_lst->stdout;
-			fprintf(stderr, "No outr_fd; out_fd: %d\n", cmd_lst->out_fd);
-		}
-		temp = temp->next;
+		i++;
 	}
+	assign_fds(cmd_lst->in_fd, cmd_lst->out_fd, cmd_lst->stdin,
+		cmd_lst->stdout);
+	printf("in check_fds: in %d out %d\n", cmd_lst->in_fd, cmd_lst->out_fd);
 	return (0);
 }
 
@@ -156,14 +103,20 @@ int	execute_execve(t_command_list *cmd_lst, char **args, t_pipe *pipes)
 
 	pid = fork();
 	if (pid == -1)
+	{
 		ft_putstr_fd("minishell: error forking\n", 2);
-	if (!pipes)
-		return(0);
+		return (-1);
+	}
+	if (pipes->open)
+	{
+		printf("closing %d\n", pipes->fd[1]);
+		close(pipes->fd[1]);
+	}
 	if (pid == 0)
 	{
-		fprintf(stderr, "Childe\n");
-		fprintf(stderr, "ch reading from %d\n", cmd_lst->in_fd);
-		fprintf(stderr, "ch writing to %d\n", cmd_lst->out_fd);
+		fprintf(stderr, "Child\n");
+		// fprintf(stderr, "ch reading from %d\n", cmd_lst->in_fd);
+		// fprintf(stderr, "ch writing to %d\n", cmd_lst->out_fd);
 		if (execve(cmd_lst->exec_path, args, NULL) == -1)
 		{
 			if (cmd_lst->in_fd != -1)
@@ -179,33 +132,6 @@ int	execute_execve(t_command_list *cmd_lst, char **args, t_pipe *pipes)
 			exit(127);
 		}
 	}
-	fprintf(stderr, "Parent\n");
-	fprintf(stderr, "pr reading from %d\n", cmd_lst->in_fd);
-	fprintf(stderr, "pr writing to %d\n", cmd_lst->out_fd);
-	fprintf(stderr, "Hehhh\n");
-	return (0);
-}
-
-int	check_path(char **path, t_command_list *cmd_lst)
-{
-	int		i;
-	char	*temp;
-	char	*path_to_test;
-
-	i = 0;
-	while (path[i])
-	{
-		temp = ft_strjoin(path[i], "/");
-		path_to_test = ft_strjoin(temp, cmd_lst->arg[0].token);
-		free(temp);
-		if (access(path_to_test, X_OK | F_OK) == 0)
-		{
-			cmd_lst->exec_path = path_to_test;
-			return (0);
-		}
-		i++;
-	}
-	cmd_lst->exec_path = NULL;
 	return (0);
 }
 
@@ -213,43 +139,53 @@ int	check_cmd(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
 {
 	char	**arg_list;
 	int		no_of_forks;
+	int		status;
 
 	no_of_forks = 0;
+	data->pipes.open = 0;
+	data->pipes.next->open = 0;
 	while (cmd_lst)
 	{
-		check_path(data->path, cmd_lst);
 		cmd_lst->out_fd = -1;
 		cmd_lst->in_fd = -1;
 		cmd_lst->stdin = dup(STDIN_FILENO);
 		cmd_lst->stdout = dup(STDOUT_FILENO);
+		check_path(data->path, cmd_lst);
 		fprintf(stderr, "original stding: %d, stdout %d\n", cmd_lst->stdin,
 			cmd_lst->stdout);
 		arg_list = get_arg_list(cmd_lst->arg);
-		if (check_fds(cmd_lst, pipes))
+		if (check_fds(data, cmd_lst, pipes))
 		{
+			if (data->heredoc)
+				unlink("heredoc_163465");
 			free(arg_list);
 			revert_fds(cmd_lst);
 		}
 		fprintf(stderr, "******Executing command: %s******\n", *arg_list);
 		// if (is_builtin(cmd_lst->exec_name))
-		//     execute_builtin(cmd_lst);
+		//     data->exit_status = execute_builtin(cmd_lst);
 		// else
-		execute_execve(cmd_lst, arg_list, pipes);
+		printf("in check_cmd: in %d out %d\n", cmd_lst->in_fd, cmd_lst->out_fd);
+		if (!execute_execve(cmd_lst, arg_list, pipes))
+			no_of_forks++;
 		if (pipes->next->open)
 		{
-			fprintf(stderr, "closing pipes %d and %d\n", pipes->next->fd[0], pipes->next->fd[1]);
-			// close(pipes->next->fd[0]);
+			fprintf(stderr, "closing pipes %d and %d\n", pipes->next->fd[0],
+				pipes->next->fd[1]);
+			close(pipes->next->fd[0]);
 			// close(pipes->next->fd[1]);
 		}
 		pipes = pipes->next;
 		free(arg_list);
 		revert_fds(cmd_lst);
-		no_of_forks++;
 		cmd_lst = cmd_lst->next;
 	}
 	while (no_of_forks--)
-		wait(NULL);
-	return (0);
+		waitpid(-1, &status, 0);
+	data->exit_status = WEXITSTATUS(status);
+	printf("EXIT STATUS: %d\n", data->exit_status);
+	return (WEXITSTATUS(status));
+	// return (0);
 }
 
 // int main(void)
