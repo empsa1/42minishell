@@ -77,8 +77,7 @@ typedef struct s_command_list
 void						print_struct(t_command_list *lst);
 int							ft_strleni(char **splitter, int i);
 int							z_cmp(char *str, char *cmp);
-void						free_all(t_command_list *cmd_lst, char *line,
-								char *changes, char **splitter);
+void						free_all(t_command_list *cmd_lst, char *changes, char **splitter);
 void						parsing(t_command_list *cmd_lst, char **splitter,
 								int i);
 int							create_executor(char *command);
