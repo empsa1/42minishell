@@ -47,8 +47,6 @@ int	main(int ac, char **av, char **envp)
 	char **splitter;
 	char *changes;
 	t_command_list *cmd_lst;
-
-	cmd_lst = malloc(sizeof(t_command_list));
 	if (ac != 1 || av[1])
 		return (ft_putstr_fd("Error: Too many arguments\n", 1));
 	init(&data, envp);
@@ -62,6 +60,7 @@ int	main(int ac, char **av, char **envp)
 			add_history(line);
 			if (!token_error(line))
 			{
+                cmd_lst = malloc(sizeof(t_command_list));
 				changes = treat_str(line);
 				splitter = ft_split(changes, 2);
 				int j = 0;

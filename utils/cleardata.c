@@ -15,7 +15,6 @@
 //clears previous cmd_lst linked nodes
 void    free_linkedlst(t_command_list *cmd_lst)
 {
-    printf("{free_linkedlst()} Inside function\n");
     t_command_list *to_clean;
     to_clean = NULL;
     if (cmd_lst->next != NULL)
