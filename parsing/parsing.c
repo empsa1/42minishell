@@ -79,7 +79,7 @@ char    *treat_str(char *line)
         {
             aspas = line[i++];
             newline[j++] = 2;
-            newline[j++] = aspas;
+            newline[j++] = 2;
             while (line[i] != aspas)
             {
                 if (line[i] == '\0')
@@ -89,7 +89,7 @@ char    *treat_str(char *line)
                     newline[j++] = line[i];
                 i++;
             }
-            newline[j++] = aspas;
+            newline[j++] = 2;
             aspas = 0;
             i++;
         }
