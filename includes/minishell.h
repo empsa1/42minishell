@@ -106,8 +106,10 @@ void terminal_prompt(void);
 void sigint_handler(int signal);
 int print_parse_error(char c);
 char *treat_str(char *line);
-int mini_heredoc();
-int check_cmd(t_command_list *cmd_lst, t_pipe *pipes);
+int mini_heredoc(char *str);
+int check_cmd(t_data *data, t_command_list *cmd_lst, t_pipe *pipes);
+t_pair *get_env(char **envp);
 char	*get_next_line(int fd);
+int token_error(char *str);
 
 #endif

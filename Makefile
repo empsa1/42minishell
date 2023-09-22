@@ -1,12 +1,14 @@
 NAME = minishell
 
 SRCS =	parsing/parsing.c\
+		parsing/token_error.c\
 		minishell.c\
 		signals.c\
 		utils/utils.c\
 		utils/utils2.c\
 		utils/error_printing.c\
 		utils/utils3.c\
+		utils/get_env.c\
 		utils/cleardata.c\
 		execution/exec.c\
 		execution/heredoc.c\

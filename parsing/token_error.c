@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 11:57:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/19 12:25:56 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/22 05:44:15 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	token_error(char *str)
 				return (1);
 		}
 	}
-	check_end_of_command(str);
+	return(check_end_of_command(str));
 	return (0);
 }
 
