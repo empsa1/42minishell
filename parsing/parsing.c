@@ -147,11 +147,13 @@ void parsing(t_command_list *cmd_lst, char **splitter, int i)
         j++;
         i++;
     }
+    cmd_lst->arg[j].token = NULL;
+    cmd_lst->arg[j].type = 0;
     if (splitter[i] && z_cmp(splitter[i], "|"))
     {
         t_command_list *cmd_newlst;
         cmd_newlst = malloc(sizeof(t_command_list));
-        cmd_newlst->arg = malloc(sizeof(t_arg) * ft_strleni(splitter, ++i));
+        cmd_newlst->arg = malloc(sizeof(t_arg) * (ft_strleni(splitter, ++i) + 1));
         cmd_lst->next = cmd_newlst;
         parsing(cmd_newlst, splitter, i);
     }
