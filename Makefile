@@ -1,6 +1,8 @@
 NAME = minishell
 
 SRCS =	parsing/parsing.c\
+		parsing/utils_parsing.c\
+		parsing/expand_parsing.c\
 		parsing/token_error.c\
 		minishell.c\
 		signals.c\

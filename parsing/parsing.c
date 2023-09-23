@@ -12,54 +12,6 @@
 
 #include "minishell.h"
 
-char **expand(char **arr)
-{
-    char **splitter = NULL;
-    int i = 0;
-    while (arr[i])
-    {
-        if (arr[i][0] == '$')
-        
-        i++;
-    }
-    return (splitter);
-}
-
-int token(char *line, int i)
-{
-    if (line[i] == '|')
-        return PIPE;
-    if (line[i] == '>')
-    {
-        if (line[i + 1] && line[i + 1]  == '>')
-            return (APPEND);
-        else
-            return (OUT);
-    }
-    if (line[i] == '<')
-    {
-        if (line[i + 1] && line[i + 1] == '<')
-            return (HEREDOC);
-        else
-            return (IN);
-    }
-    if (line[i] == ';')
-        return (END);
-    else
-        return (STR);
-}
-
-void    iterator(char *line)
-{
-    int i = 0;
-    while (line[i] != '\0')
-    {
-        printf("Index %d-> {%c}; ", i, line[i]);
-        i++;
-    }
-    printf("\n");
-}
-
 //echo "A B | < > >> << ;   FDASF" | A | B | C | D <<<DEW
 
 char    *treat_str(char *line)
@@ -72,25 +24,22 @@ char    *treat_str(char *line)
     aspas = 0;
 
     newline = malloc(ft_strlen(line) * 2);
-    //iterator(line);
     while (line[i] != '\0')
     {
         if (!aspas && line[i] && (line[i] == '"' || line[i] == '\''))
         {
             aspas = line[i++];
-            //j++;
-            //newline[j++] = 2;
-            //newline[j++] = 2;
             while (line[i] != aspas)
             {
                 if (line[i] == '\0')
                 {
+                    printf("ERORR\n");
+                    exit(-1);
                     return ("{ERROR}");
                 }
                     newline[j++] = line[i];
                 i++;
             }
-            //newline[j++] = 2;
             aspas = 0;
             i++;
         }
@@ -114,16 +63,6 @@ char    *treat_str(char *line)
     }
     newline[j++] = '\0';
     return (newline);
-}
-
-int ft_strleni(char **splitter, int i)
-{
-    int size;
-
-    size = 0;
-    while (splitter[i] && !z_cmp(splitter[i++], "|"))
-        size++;
-    return (size);
 }
 
 void parsing(t_command_list *cmd_lst, char **splitter, int i)
