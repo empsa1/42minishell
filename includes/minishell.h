@@ -108,7 +108,7 @@ int							check_unclosed(char *str);
 void						terminal_prompt(void);
 void						sigint_handler(int signal);
 int							print_parse_error(char c);
-char						*treat_str(char *line);
+char    					*treat_str(char *line, char aspas, int i, int j);
 int							mini_heredoc(t_data *data, char *str);
 int							check_cmd(t_data *data, t_command_list *cmd_lst,
 								t_pipe *pipes);

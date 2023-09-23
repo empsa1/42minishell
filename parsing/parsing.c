@@ -14,14 +14,9 @@
 
 //echo "A B | < > >> << ;   FDASF" | A | B | C | D <<<DEW
 
-char    *treat_str(char *line)
+char    *treat_str(char *line, char aspas, int i, int j)
 {
-    int i;
-    int j = 0;
-    char aspas;
     char *newline;
-    i = 0;
-    aspas = 0;
 
     newline = malloc(ft_strlen(line) * 2);
     while (line[i] != '\0')

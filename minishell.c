@@ -61,7 +61,7 @@ int	main(int ac, char **av, char **envp)
 			if (!token_error(line))
 			{
                 cmd_lst = malloc(sizeof(t_command_list));
-				changes = treat_str(line);
+				changes = treat_str(line, 0, 0, 0);
 				splitter = ft_split(changes, 2);
 				int j = 0;
 				printf("{main()} Treated: {%s}\n", line);
