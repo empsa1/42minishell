@@ -78,7 +78,7 @@ char    *treat_str(char *line)
         if (!aspas && line[i] && (line[i] == '"' || line[i] == '\''))
         {
             aspas = line[i++];
-            j++;
+            //j++;
             //newline[j++] = 2;
             //newline[j++] = 2;
             while (line[i] != aspas)
