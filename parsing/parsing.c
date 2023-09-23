@@ -27,13 +27,8 @@ char    *treat_str(char *line, char aspas, int i, int j)
             while (line[i] != aspas)
             {
                 if (line[i] == '\0')
-                {
-                    printf("ERORR\n");
-                    exit(-1);
                     return ("{ERROR}");
-                }
-                    newline[j++] = line[i];
-                i++;
+                newline[j++] = line[i++];
             }
             aspas = 0;
             i++;
@@ -54,7 +49,6 @@ char    *treat_str(char *line, char aspas, int i, int j)
         }
         else
             newline[j++] = line[i++];
-        printf("%c <- %c\n", newline[i - 1], line[i - 1]);
     }
     newline[j++] = '\0';
     return (newline);
