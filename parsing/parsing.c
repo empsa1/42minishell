@@ -54,6 +54,25 @@ char    *treat_str(char *line, char aspas, int i, int j)
     return (newline);
 }
 
+void    solve_rest(t_command_list *cmd_lst, char **splitter, int i)
+{
+    if (splitter[i] && z_cmp(splitter[i], "|"))
+    {
+        t_command_list *cmd_newlst;
+        cmd_newlst = malloc(sizeof(t_command_list));
+        cmd_newlst->arg = malloc(sizeof(t_arg) * (ft_strleni(splitter, ++i) + 1));
+        cmd_lst->next = cmd_newlst;
+        parsing(cmd_newlst, splitter, i);
+    }
+    else if (splitter[i] && z_cmp(splitter[i], ";"))
+    {
+        cmd_lst->next = NULL;
+        return ;
+    }
+    else
+        cmd_lst->next = NULL;
+}
+
 void parsing(t_command_list *cmd_lst, char **splitter, int i)
 {
     int j;
@@ -80,19 +99,5 @@ void parsing(t_command_list *cmd_lst, char **splitter, int i)
     }
     cmd_lst->arg[j].token = NULL;
     cmd_lst->arg[j].type = 0;
-    if (splitter[i] && z_cmp(splitter[i], "|"))
-    {
-        t_command_list *cmd_newlst;
-        cmd_newlst = malloc(sizeof(t_command_list));
-        cmd_newlst->arg = malloc(sizeof(t_arg) * (ft_strleni(splitter, ++i) + 1));
-        cmd_lst->next = cmd_newlst;
-        parsing(cmd_newlst, splitter, i);
-    }
-    else if (splitter[i] && z_cmp(splitter[i], ";"))
-    {
-        cmd_lst->next = NULL;
-        return ;
-    }
-    else
-        cmd_lst->next = NULL;
+    solve_rest(cmd_lst, splitter, i);
 }
