@@ -78,8 +78,9 @@ char    *treat_str(char *line)
         if (!aspas && line[i] && (line[i] == '"' || line[i] == '\''))
         {
             aspas = line[i++];
-            newline[j++] = 2;
-            newline[j++] = 2;
+            j++;
+            //newline[j++] = 2;
+            //newline[j++] = 2;
             while (line[i] != aspas)
             {
                 if (line[i] == '\0')
@@ -89,7 +90,7 @@ char    *treat_str(char *line)
                     newline[j++] = line[i];
                 i++;
             }
-            newline[j++] = 2;
+            //newline[j++] = 2;
             aspas = 0;
             i++;
         }
@@ -127,7 +128,9 @@ int ft_strleni(char **splitter, int i)
 
 void parsing(t_command_list *cmd_lst, char **splitter, int i)
 {
-    int j = 0;
+    int j;
+    
+    j = 0;
     // if (!is_valid_command(splitter[i++]))
     //     exit(-1);
     while (splitter[i] && !z_cmp(splitter[i], "|") && !z_cmp(splitter[i], ";"))
