@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/22 17:14:17 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/22 20:01:15 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int	main(int ac, char **av, char **envp)
 				cmd_lst->arg = malloc(sizeof(t_arg) * (ft_strleni(splitter, 0) + 1));
 				parsing(cmd_lst, splitter, 0);
 				print_struct(cmd_lst);
+                check_cmd(&data, cmd_lst, &data.pipes);
                 free_all(cmd_lst, changes, splitter);
-                // check_cmd(&data, cmd_lst, &data.pipes);
 			}
             free(line);
 		}

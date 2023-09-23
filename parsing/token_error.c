@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 11:57:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/22 05:44:15 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/22 20:08:41 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /**
 
-	* @brief Returns 2 if there are two special tokens without any strings in 
+	* @brief Returns 2 if there are two special tokens without any strings in
 	between, or a special token at end of command;
  *
  * @param str
@@ -35,7 +35,7 @@ int	check_end_of_command(char *str)
 			break ;
 		if (ft_strchr("<>|", str[i]))
 			return (print_parse_error(str[i]));
-		break;
+		break ;
 	}
 	return (0);
 }
@@ -54,14 +54,18 @@ int	check_unexpected_token(char *str)
 
 int	token_error(char *str)
 {
-	int	i;
+	int		i;
+	char	*trimmed;
 
 	i = -1;
-	if (ft_strchr("<>|", *ft_strtrim(str, " ")))
+	trimmed = ft_strtrim(str, " ");
+	if (ft_strchr("<>|", *trimmed))
 	{
 		print_parse_error(*str);
-		return(1);
+		free(trimmed);
+		return (1);
 	}
+	free(trimmed);
 	while (str[++i])
 	{
 		if (!ft_strncmp(&str[i], "<<", 2) || !ft_strncmp(&str[i], ">>", 2))
@@ -76,7 +80,7 @@ int	token_error(char *str)
 				return (1);
 		}
 	}
-	return(check_end_of_command(str));
+	return (check_end_of_command(str));
 	return (0);
 }
 

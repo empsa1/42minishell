@@ -19,7 +19,6 @@ void    free_linkedlst(t_command_list *cmd_lst)
     to_clean = NULL;
     if (cmd_lst->next != NULL)
         to_clean = cmd_lst->next;
-    printf("Im going to free node: %p\n", cmd_lst);
     free(cmd_lst);
     if (to_clean)
         free_linkedlst(to_clean);
