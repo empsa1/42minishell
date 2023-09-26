@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 10:13:12 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 10:35:11 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	do_pipes(t_command_list *cmd_lst, t_pipe *pipes)
 	return (0);
 }
 
-int	assign_fds(int in_fd, int out_fd, int stdin, int stdout)
+int	assign_fds(int in_fd, int out_fd)
 {
 	if (in_fd != -1)
 	{
@@ -74,8 +74,7 @@ int	check_fds(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
 		}
 		i++;
 	}
-	assign_fds(cmd_lst->in_fd, cmd_lst->out_fd, cmd_lst->stdin,
-		cmd_lst->stdout);
+	assign_fds(cmd_lst->in_fd, cmd_lst->out_fd);
 	return (0);
 }
 
