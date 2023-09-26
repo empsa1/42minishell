@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 11:57:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 07:39:17 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 08:31:30 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	token_error(t_data *data, char *str)
 				return (1);
 			}
 		}
-		else if (ft_strchr("<>|", str[i]))
+		else if (ft_strchr("<>", str[i]))
 		{
 			if (check_unexpected_token(data, &str[i + 1]))
 			{

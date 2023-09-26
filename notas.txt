@@ -17,6 +17,6 @@ Tests:
 > (Error)
 < (Error)
 frees
-delete heredoc
 Exit status
 Empty command (just enter, or "", ""echo...)
+invalid infile hangs pipe (ls < invalid_file | wc)

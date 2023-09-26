@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 07:41:15 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 10:13:59 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,13 @@ void	init(t_data *data, char **envp)
 	getcwd(data->cwd, PATH_MAX);
 }
 
-void	init_cmd_lst(t_command_list *cmd_lst, char **splitter)
+void	init_cmd_lst(t_command_list *cmd_lst)
 {
-	cmd_lst->arg = NULL;
 	cmd_lst->exec_path = NULL;
 	cmd_lst->in_fd = -1;
 	cmd_lst->out_fd = -1;
-	cmd_lst->stdin = -1;
-	cmd_lst->stdout = -1;
-	cmd_lst->arg = malloc(sizeof(t_arg) * (ft_strleni(splitter, 0) + 1));
+	cmd_lst->stdin = dup(STDIN_FILENO);
+	cmd_lst->stdout = dup(STDOUT_FILENO);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -60,6 +58,7 @@ int	main(int ac, char **av, char **envp)
 	t_data data;
 	char **splitter;
 	char *changes;
+	char * line;
 	t_command_list *cmd_lst;
 
 	if (ac != 1 || av[1])
@@ -69,7 +68,7 @@ int	main(int ac, char **av, char **envp)
 	// signal(SIGINT, sigint_handler);
 	while (1)
 	{
-		char *line = readline("minishell$>");
+		line = readline("minishell$>");
 		if (line != NULL && *line)
 		{
 			add_history(line);
@@ -84,7 +83,8 @@ int	main(int ac, char **av, char **envp)
 				changes = treat_str(line, 0, 0, 0);
 				splitter = ft_split(changes, 2);
 				cmd_lst = malloc(sizeof(t_command_list));
-				init_cmd_lst(cmd_lst, splitter);
+				cmd_lst->arg = malloc(sizeof(t_arg) * (ft_strleni(splitter, 0)
+						+ 1));
 				parsing(cmd_lst, splitter, 0);
 				check_cmd(&data, cmd_lst, &data.pipes);
 				free_all(cmd_lst, changes, splitter);

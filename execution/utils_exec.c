@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 10:04:18 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 06:18:18 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 10:10:54 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	free_cmd(char **arg_list, t_command_list *cmd_lst, int *heredoc)
 		unlink("heredoc_163465");
 		*heredoc = 0;
 	}
-	free(arg_list);
+	if (arg_list)
+		free(arg_list);
 	free_args(cmd_lst->arg);
 	free(cmd_lst->exec_path);
 }

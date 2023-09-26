@@ -132,5 +132,6 @@ void						free_data(t_data *data);
 void						free_args(t_arg *arg);
 void						free_cmd(char **arg_list, t_command_list *cmd_lst,
 								int *heredoc);
+void						init_cmd_lst(t_command_list *cmd_lst);
 
 #endif
