@@ -78,15 +78,12 @@ void parsing(t_command_list *cmd_lst, char **splitter, int i)
     int j;
     
     j = 0;
-    // if (!is_valid_command(splitter[i++]))
-    //     exit(-1);
     while (splitter[i] && !z_cmp(splitter[i], "|") && !z_cmp(splitter[i], ";"))
     {
         if (token(splitter[i], 0) != 0 && splitter[i + 1])
         {
             cmd_lst->arg[j].token = splitter[i + 1];
             cmd_lst->arg[j].type = token(splitter[i], 0);
-            printf("%d %s\n",cmd_lst->arg[j].type, cmd_lst->arg[j].token);
             i++;
         }
         else

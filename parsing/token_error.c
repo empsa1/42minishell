@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 11:57:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/22 20:08:41 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 07:39:17 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
  * @return int
  */
 
-int	check_end_of_command(char *str)
+int	check_end_of_command(t_data *data, char *str)
 {
 	int	i;
 
@@ -34,58 +34,58 @@ int	check_end_of_command(char *str)
 		if (!str[i])
 			break ;
 		if (ft_strchr("<>|", str[i]))
-			return (print_parse_error(str[i]));
+		{
+			data->exit_status = 2;
+			return (print_syntax_error(str[i + 1]));
+		}
 		break ;
 	}
 	return (0);
 }
 
-int	check_unexpected_token(char *str)
+int	check_unexpected_token(t_data *data, char *str)
 {
 	int	i;
 
 	i = 0;
-	while (str[i] == ' ')
+	if (!str)
+		return (0);
+	while (str[i] && str[i] == ' ')
 		i++;
 	if (str[i] && ft_strchr("<>|", str[i]))
-		return (print_parse_error(str[i]));
+	{
+		data->exit_status = 2;
+		return (print_syntax_error(str[i]));
+	}
 	return (0);
 }
 
-int	token_error(char *str)
+int	token_error(t_data *data, char *str)
 {
-	int		i;
-	char	*trimmed;
+	int i;
 
-	i = -1;
-	trimmed = ft_strtrim(str, " ");
-	if (ft_strchr("<>|", *trimmed))
-	{
-		print_parse_error(*str);
-		free(trimmed);
-		return (1);
-	}
-	free(trimmed);
-	while (str[++i])
+	i = 0;
+	while (str[i] == ' ')
+		i++;
+	while (str[i] != 0)
 	{
 		if (!ft_strncmp(&str[i], "<<", 2) || !ft_strncmp(&str[i], ">>", 2))
 		{
-			i += 2;
-			if (check_unexpected_token(&str[i]))
+			if (check_unexpected_token(data, &str[i + 2]))
+			{
+				data->exit_status = 2;
 				return (1);
+			}
 		}
 		else if (ft_strchr("<>|", str[i]))
 		{
-			if (check_unexpected_token(&str[++i]))
+			if (check_unexpected_token(data, &str[i + 1]))
+			{
+				data->exit_status = 2;
 				return (1);
+			}
 		}
+		i++;
 	}
-	return (check_end_of_command(str));
-	return (0);
+	return (check_end_of_command(data, str));
 }
-
-// int	main(int ac, char **av)
-// {
-// 	if (ac > 1)
-// 		return (token_error(av[1]));
-// }

@@ -4,6 +4,7 @@ SRCS =	parsing/parsing.c\
 		parsing/utils_parsing.c\
 		parsing/expand_parsing.c\
 		parsing/token_error.c\
+		parsing/check_unclosed.c\
 		minishell.c\
 		signals.c\
 		utils/utils.c\
@@ -15,6 +16,7 @@ SRCS =	parsing/parsing.c\
 		execution/exec.c\
 		execution/heredoc.c\
 		execution/utils_exec.c\
+		utils/free_data.c\
 		#parsing/check_unclosed.c\
 		#parsing/token_error.c
 

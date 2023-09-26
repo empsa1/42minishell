@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_unclosed.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eportela <eportela@student.42.fr>          +#+  +:+       +#+        */
+/*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 17:04:01 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/21 15:27:00 by eportela         ###   ########.fr       */
+/*   Updated: 2023/09/26 07:40:35 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,77 +19,39 @@
 
 #include "minishell.h"
 
-int	check_parenthesis(char *str)
-{
-	char	*tester;
-	int		i;
-	int		j;
-
-	i = 0;
-	tester = ft_strdup(str);
-	while (tester[i] == ' ')
-		i++;
-	if (*tester == ')')
-		return (print_syntax_error(')'));
-	while (tester[i])
-	{
-		if (tester[i++] == '(')
-		{
-			j = i;
-			while (tester[j++])
-			{
-				if (tester[j] == ')')
-				{
-					tester[j] = 2;
-					break;
-				}
-			}
-		}
-	}
-	printf("%s\n", tester);
-	free(tester);
-	return (0);
-}
-
 // int	check_parenthesis(char *str)
 // {
+// 	char	*tester;
 // 	int		i;
 // 	int		j;
-// 	char	c;
 
-// 	i = -1;
-// 	j = 0;
-// 	c = 0;
-// 	while (str[++i])
+// 	i = 0;
+// 	tester = ft_strdup(str);
+// 	while (tester[i] == ' ')
+// 		i++;
+// 	if (*tester == ')')
+// 		return (print_syntax_error(')'));
+// 	while (tester[i])
 // 	{
-// 		printf("checking %c\n", str[i]);
-// 		if (str[i] == ')')
+// 		if (tester[i++] == '(')
 // 		{
-// 			printf("Here\n");
-// 			return (print_syntax_error(')'));
-// 		}
-// 		if (str[i] == '(')
-// 		{
-// 			printf("found (\n");
-// 			if (j == 0)
-// 				j = i;
-// 			while (str[j++])
+// 			j = i;
+// 			while (tester[j++])
 // 			{
-// 				if (str[j] == ')')
+// 				if (tester[j] == ')')
 // 				{
-// 					printf("found )\n");
-// 					i++;
-// 					break ;
+// 					tester[j] = 2;
+// 					break;
 // 				}
 // 			}
-// 			if (str[j] != ')')
-// 				return (print_syntax_error(str[j]));
 // 		}
 // 	}
+// 	printf("%s\n", tester);
+// 	free(tester);
 // 	return (0);
 // }
 
-int	check_unclosed(char *str)
+int	check_unclosed(t_data *data, char *str)
 {
 	char	c;
 	int		i;
@@ -104,15 +66,14 @@ int	check_unclosed(char *str)
 		{
 			while (str[++i])
 				if (str[i] == c)
-				{
-					printf("%c not found\n", c);
 					break ;
-				}
 			if (str[i] != c)
+			{
+				data->exit_status = 2;	
 				return (print_syntax_error(c));
+			}
 			c = 0;
 		}
-		return (check_parenthesis(str));
 	}
 	return (0);
 }

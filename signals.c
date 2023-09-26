@@ -14,7 +14,7 @@ void sigint_handler(int signal)
 {
     if (signal)
     {
-        kill(getpid(), SIGSEGV); //Função proibida
+        kill(0, SIGSEGV); //Função proibida
         terminal_prompt();
     }
 }
