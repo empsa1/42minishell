@@ -1,0 +1,22 @@
+OK
+builtins
+    echo / pwd / env / export
+get_env
+
+TODO
+builtins
+    unset
+    cd ? - return value
+    exit
+    norminette
+    check mem leaks
+expand_path
+
+Tests:
+> out (replaces content of out with nothing)
+> (Error)
+< (Error)
+frees
+Exit status
+Empty command (just enter, or "", ""echo...)
+invalid infile hangs pipe (ls < invalid_file | wc)

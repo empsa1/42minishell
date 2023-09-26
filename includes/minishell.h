@@ -45,11 +45,18 @@ typedef struct s_pipe
 	struct s_pipe			*next;
 }							t_pipe;
 
+typedef struct s_pid
+{
+	int						value;
+	struct s_pid			*next;
+}							t_pid;
+
 typedef struct s_data
 {
 	char					*name;
 	int						heredoc;
 	int						exit_status;
+	t_pid					*pid;
 	t_pair					*env;
 	t_pair					*exported_vars;
 	char					**path;
@@ -75,10 +82,11 @@ typedef struct s_command_list
 }							t_command_list;
 
 void						print_struct(t_command_list *lst);
+int							token(char *line, int i);
 int							ft_strleni(char **splitter, int i);
 int							z_cmp(char *str, char *cmp);
-void						free_all(t_command_list *cmd_lst, char *line,
-								char *changes, char **splitter);
+void						free_all(t_command_list *cmd_lst, char *changes,
+								char **splitter);
 void						parsing(t_command_list *cmd_lst, char **splitter,
 								int i);
 int							create_executor(char *command);
@@ -103,22 +111,27 @@ void						free_pairs(t_pair *pair);
 void						sort_list(t_pair *export);
 int							print_syntax_error(char c);
 int							print_file_error(char *s1, char *s2);
-int							token_error(char *str);
-int							check_unclosed(char *str);
+int							check_unclosed(t_data *data, char *str);
 void						terminal_prompt(void);
 void						sigint_handler(int signal);
 int							print_parse_error(char c);
-char						*treat_str(char *line);
+char						*treat_str(char *line, char aspas, int i, int j);
 int							mini_heredoc(t_data *data, char *str);
 int							check_cmd(t_data *data, t_command_list *cmd_lst,
 								t_pipe *pipes);
 t_pair						*get_env(char **envp);
 char						*get_next_line(int fd);
-int							token_error(char *str);
+int							token_error(t_data *data, char *str);
 char						**get_arg_list(t_arg *arg);
 int							open_file(int *fd, char *filename, int flags,
 								int perms);
 void						revert_fds(t_command_list *cmd_lst);
-int							check_path(char **path, t_command_list *cmd_lst);
+int							check_path(char **path, t_command_list *cmd_lst,
+								char *str);
+void						free_data(t_data *data);
+void						free_args(t_arg *arg);
+void						free_cmd(char **arg_list, t_command_list *cmd_lst,
+								int *heredoc);
+void						init_cmd_lst(t_command_list *cmd_lst);
 
 #endif

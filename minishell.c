@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/22 17:35:24 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 12:08:29 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,23 @@ void	init(t_data *data, char **envp)
 			data->path = ft_split(&envp[i][5], ':');
 	}
 	data->env = get_env(envp);
-    data->exit_status = 0;
+	data->exit_status = 0;
 	data->pipes.next = malloc(sizeof(t_pipe));
 	data->pipes.next->next = &data->pipes;
-    data->heredoc = 0;
+	data->heredoc = 0;
+	data->pid = malloc(sizeof(t_pid));
+	data->pid->value = 0;
+	data->pid->next = NULL;
 	getcwd(data->cwd, PATH_MAX);
+}
+
+void	init_cmd_lst(t_command_list *cmd_lst)
+{
+	cmd_lst->exec_path = NULL;
+	cmd_lst->in_fd = -1;
+	cmd_lst->out_fd = -1;
+	cmd_lst->stdin = dup(STDIN_FILENO);
+	cmd_lst->stdout = dup(STDOUT_FILENO);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -46,38 +58,41 @@ int	main(int ac, char **av, char **envp)
 	t_data data;
 	char **splitter;
 	char *changes;
+	char * line;
 	t_command_list *cmd_lst;
 
-	cmd_lst = malloc(sizeof(t_command_list));
 	if (ac != 1 || av[1])
 		return (ft_putstr_fd("Error: Too many arguments\n", 1));
 	init(&data, envp);
 	// signal(SIGQUIT, SIG_IGN);
-	// signal(SIGINT, terminal_prompt);
+	// signal(SIGINT, sigint_handler);
 	while (1)
 	{
-		char *line = readline("minishell$>");
+		line = readline("minishell$>");
 		if (line != NULL && *line)
 		{
 			add_history(line);
-			if (!token_error(line))
+			if (!token_error(&data, line) && !check_unclosed(&data, line))
 			{
-				changes = treat_str(line);
-				splitter = ft_split(changes, 2);
-				int j = 0;
-				printf("{main()} Treated: {%s}\n", line);
-				while (splitter[j])
+				if (!ft_strncmp(line, "exit", 4) && (!line[4]
+						|| line[4] == ' '))
 				{
-					printf("{main()} Splitter %d: {%s}\n", j, splitter[j]);
-					j++;
+					free(line);
+					break ;
 				}
-				cmd_lst->arg = malloc(sizeof(t_arg) * (ft_strleni(splitter, 0) + 1));
+				changes = treat_str(line, 0, 0, 0);
+				splitter = ft_split(changes, 2);
+				cmd_lst = malloc(sizeof(t_command_list));
+				cmd_lst->arg = malloc(sizeof(t_arg) * (ft_strleni(splitter, 0)
+						+ 1));
 				parsing(cmd_lst, splitter, 0);
-                check_cmd(&data, cmd_lst, &data.pipes);
-				// free_all(cmd_lst, line, changes, splitter);
+				check_cmd(&data, cmd_lst, &data.pipes);
+				free_all(cmd_lst, changes, splitter);
 			}
-            free(line);
 		}
+		free(line);
+		fprintf(stderr, "EXIT STATUS: %d\n", data.exit_status);
 	}
+	free_data(&data);
 	return (0);
 }

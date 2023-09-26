@@ -6,17 +6,30 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 10:04:18 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/22 16:42:27 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 10:10:54 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+void	free_cmd(char **arg_list, t_command_list *cmd_lst, int *heredoc)
+{
+	if (*heredoc)
+	{
+		unlink("heredoc_163465");
+		*heredoc = 0;
+	}
+	if (arg_list)
+		free(arg_list);
+	free_args(cmd_lst->arg);
+	free(cmd_lst->exec_path);
+}
+
 char	**get_arg_list(t_arg *arg)
 {
 	int		len;
 	int		i;
-    int j;
+	int		j;
 	char	**arg_list;
 
 	len = 0;
@@ -27,13 +40,16 @@ char	**get_arg_list(t_arg *arg)
 			len++;
 		i++;
 	}
-	arg_list = (char **)ft_calloc(len + 1, sizeof(char *));
+	if (len)
+		arg_list = (char **)ft_calloc(len + 1, sizeof(char *));
+	else
+		return (NULL);
 	i = 0;
-    j = 0;
+	j = 0;
 	while (arg[i].token != NULL)
 	{
 		if (arg[i].type == 0)
-			arg_list[j++] = ft_strdup(arg[i].token);
+			arg_list[j++] = arg[i].token;
 		i++;
 	}
 	return (arg_list);
@@ -42,14 +58,10 @@ char	**get_arg_list(t_arg *arg)
 int	open_file(int *fd, char *filename, int flags, int perms)
 {
 	if (*fd != -1)
-	{
-		fprintf(stderr, "closed %d\n", *fd);
 		close(*fd);
-	}
 	*fd = open(filename, flags, perms);
 	if (*fd == -1)
 		return (1);
-	fprintf(stderr, "opened \"%s\" on fd %d\n", filename, *fd);
 	return (0);
 }
 
@@ -61,30 +73,36 @@ void	revert_fds(t_command_list *cmd_lst)
 	close(cmd_lst->stdout);
 }
 
-int	check_path(char **path, t_command_list *cmd_lst)
+int	check_path(char **path, t_command_list *cmd_lst, char *str)
 {
 	int i;
 	char *temp;
 	char *path_to_test;
 
+	path_to_test = NULL;
 	i = 0;
-    if (*cmd_lst->arg[0].token == '/')
-    {
-        cmd_lst->exec_path = ft_strdup(cmd_lst->arg[0].token);
-        return (0);
-    }
+	if (*str == '/')
+	{
+		cmd_lst->exec_path = ft_strdup(str);
+		return (0);
+	}
 	while (path[i])
 	{
-		temp = ft_strjoin(path[i], "/");
-		path_to_test = ft_strjoin(temp, cmd_lst->arg[0].token);
+		if (path[i][ft_strlen(path[i]) - 1] != '/')
+			temp = ft_strjoin(path[i], "/");
+		else
+			temp = ft_strdup(path[i]);
+		path_to_test = ft_strjoin(temp, str);
 		free(temp);
 		if (access(path_to_test, X_OK | F_OK) == 0)
 		{
 			cmd_lst->exec_path = path_to_test;
 			return (0);
 		}
+		else if (path[i + 1])
+			free(path_to_test);
 		i++;
 	}
-	cmd_lst->exec_path = NULL;
+	cmd_lst->exec_path = path_to_test;
 	return (0);
 }
