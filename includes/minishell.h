@@ -81,6 +81,15 @@ typedef struct s_command_list
 	struct s_command_list	*next;
 }							t_command_list;
 
+/**BUILTINS*/
+int							cd(t_data *data, char **str);
+int							echo(t_data *data, char **str);
+int							env(t_data *data, char **str);
+int							export(t_data *data, char **str);
+int							pwd(t_data *data, char **str);
+int							unset(t_data *data, char **str);
+int							is_builtin(t_data *data, char **args);
+
 void						print_struct(t_command_list *lst);
 int							token(char *line, int i);
 int							ft_strleni(char **splitter, int i);
@@ -92,16 +101,9 @@ void						parsing(t_command_list *cmd_lst, char **splitter,
 int							create_executor(char *command);
 void						sigint_handler(int signal);
 int							exec(char **str);
-int							cd(t_data *data, char *str);
 int							expand_path(char *str, char *buf);
-int							env(t_pair *env, t_pair *exported_vars, char *str);
-int							export(t_pair *env, t_pair *exported_vars,
-								char **str);
-int							unset(t_data *data, char **str);
-int							pwd(void);
 t_pair						*get_env(char **envp);
 void						cleanup(t_data *data);
-int							echo(char *str);
 int							get_length_to_char(char *str, char c);
 void						free_nodes(t_node *node);
 void						print_nodes(t_node *node);
@@ -133,5 +135,7 @@ void						free_args(t_arg *arg);
 void						free_cmd(char **arg_list, t_command_list *cmd_lst,
 								int *heredoc);
 void						init_cmd_lst(t_command_list *cmd_lst);
+int							check_fds(t_data *data, t_command_list *cmd_lst,
+								t_pipe *pipes, int i);
 
 #endif

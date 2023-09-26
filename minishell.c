@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 12:08:29 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 17:33:43 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	init(t_data *data, char **envp)
 	}
 	data->env = get_env(envp);
 	data->exit_status = 0;
+	data->exported_vars = NULL;
 	data->pipes.next = malloc(sizeof(t_pipe));
 	data->pipes.next->next = &data->pipes;
 	data->heredoc = 0;

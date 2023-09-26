@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:59:30 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/18 11:20:28 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 17:11:53 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,11 +109,9 @@ t_pair	*copy_list_all(t_pair *env, t_pair *exported_vars)
 
 void	print_sorted_all(t_pair *env, t_pair *exported_vars)
 {
-	t_pair	*temp_env;
 	t_pair	*export;
 	t_pair	*temp_export;
 
-	temp_env = env;
 	export = copy_list_all(env, exported_vars);
 	sort_list(export);
 	temp_export = export;
@@ -128,10 +126,14 @@ void	print_sorted_all(t_pair *env, t_pair *exported_vars)
 	free_pairs(export);
 }
 
-int	export(t_pair *env, t_pair *exported_vars, char **str)
+int	export(t_data *data, char **str)
 {
+	t_pair *env;
+	t_pair *exported_vars;
 	int	i;
 
+	env = data->env;
+	exported_vars = data->exported_vars;
 	i = -1;
 	if (!str)
 	{
@@ -155,4 +157,5 @@ int	export(t_pair *env, t_pair *exported_vars, char **str)
 				add_to_list(str[i], exported_vars);
 		}
 	}
+	return(0);
 }

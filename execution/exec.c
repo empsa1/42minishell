@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anda-cun <anda-cun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 13:28:43 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 20:05:10 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,10 @@ int	assign_fds(int in_fd, int out_fd)
 	return (0);
 }
 
-int	check_fds(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
+int	check_fds(t_data *data, t_command_list *cmd_lst, t_pipe *pipes, int i)
 {
-	int	i;
-
-	i = 0;
 	if ((cmd_lst->next || pipes->next->open))
-	{
 		do_pipes(cmd_lst, pipes);
-		fprintf(stderr, "doing pipe\n");
-	}
 	while (cmd_lst->arg[i].token != NULL)
 	{
 		if (cmd_lst->arg[i].type == IN)
@@ -83,6 +77,7 @@ void	add_pid(t_data *data, int pid)
 	t_pid	*temp;
 
 	temp = malloc(sizeof(t_pid));
+	fprintf(stderr, "adding %d\n", pid);
 	temp->value = pid;
 	temp->next = data->pid;
 	data->pid = temp;
@@ -99,10 +94,16 @@ int	execute_execve(t_data *data, t_command_list *cmd_lst, char **args)
 		ft_putstr_fd("minishell: error forking\n", 2);
 		return (-1);
 	}
+	if (pid != 0)
+		add_pid(data, pid);
 	if (pid == 0)
 	{
 		if (execve(cmd_lst->exec_path, args, NULL) == -1)
 		{
+			t_pid *temp;
+			temp = data->pid;
+			data->pid = data->pid->next;
+			free(temp);
 			if (data->pipes.open)
 				close(data->pipes.fd[0]);
 			revert_fds(cmd_lst);
@@ -111,7 +112,6 @@ int	execute_execve(t_data *data, t_command_list *cmd_lst, char **args)
 			exit(127);
 		}
 	}
-	add_pid(data, pid);
 	return (0);
 }
 
@@ -131,11 +131,9 @@ void	free_pid(t_data *data)
 int	check_cmd(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
 {
 	char	**arg_list;
-	int		no_of_forks;
 	int		status;
 	t_pid	*pid;
 
-	no_of_forks = 0;
 	data->pipes.open = 0;
 	data->pipes.next->open = 0;
 	data->exit_status = 0;
@@ -145,7 +143,7 @@ int	check_cmd(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
 		arg_list = get_arg_list(cmd_lst->arg);
 		if (arg_list)
 			check_path(data->path, cmd_lst, *arg_list);
-		if (check_fds(data, cmd_lst, pipes))
+		if (check_fds(data, cmd_lst, pipes, 0))
 		{
 			free_cmd(arg_list, cmd_lst, &data->heredoc);
 			revert_fds(cmd_lst);
@@ -153,12 +151,8 @@ int	check_cmd(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
 		}
 		else
 		{
-			fprintf(stderr, "******Executing command: %s******\n", *arg_list);
-			// if (is_builtin(cmd_lst->exec_name))
-			//     data->exit_status = execute_builtin(cmd_lst);
-			// else
-			if (!execute_execve(data, cmd_lst, arg_list))
-				no_of_forks++;
+			if (!is_builtin(data, arg_list))
+				execute_execve(data, cmd_lst, arg_list);
 			pipes = pipes->next;
 			free_cmd(arg_list, cmd_lst, &data->heredoc);
 			revert_fds(cmd_lst);

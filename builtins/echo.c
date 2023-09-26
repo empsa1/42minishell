@@ -6,36 +6,55 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:41:40 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/14 10:01:45 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 20:04:03 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int echo(char *str)
+static int	write_string(char **str, int newline)
 {
-    int i;
+	int	j;
 
-    i =    0;
-    if (!ft_strncmp(str, "-n", 2))
-    {
-        if (!ft_strncmp(str, "-n ", 3))
-            return(ft_putstr_fd(&str[2], 1));
-        while (str[2 + i])
-        {
-            if (str[2 + i] == 'n')
-                i++;
-            else if (str[2 + i] == ' ')
-            {
-                i++;
-                break;
-            }
-            else
-                return(ft_putendl_fd(str, 1));
-        }
-        return(ft_putstr_fd(&str[2 + i], 1));
-    }
-    return(ft_putendl_fd(str, 1));
+	j = 0;
+	while (str[j])
+	{
+		if (ft_putstr_fd(str[j], 1) == -1)
+			return (-1);
+		if (str[j + 1])
+			if (ft_putchar_fd(' ', 1) == -1)
+				return (-1);
+		j++;
+	}
+	if (newline)
+		if (ft_putendl_fd("", 1) == -1)
+			return (-1);
+	return (0);
+}
+
+int	echo(t_data *data, char **str)
+{
+	int	i;
+	int	j;
+	int	newline;
+
+	i = 0;
+	j = 0;
+	newline = 1;
+	if (!*str)
+		return (ft_putendl_fd("", 1));
+	if (!ft_strncmp(str[0], "-n", 2))
+	{
+		while (str[0][1 + i] == 'n')
+			i++;
+		if (!str[0][1 + i])
+		{
+			newline = 0;
+			j++;
+		}
+	}
+	data->exit_status = write_string(&str[j], newline);
+	return (0);
 }
 
 // int main(int ac, char **av)

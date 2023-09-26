@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 20:32:07 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/17 11:27:48 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 19:50:23 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,24 @@
  * @return int
  */
 
-int env(t_pair *env, t_pair *exported_vars, char *str)
+int env(t_data *data, char **str)
 {
+	t_pair *env;
+	t_pair *exported_vars;
 	t_pair *temp;
 
-	if (str)
+	env = data->env;
+	exported_vars = data->exported_vars;
+	if (*str)
 	{
 		ft_putstr_fd("env: ", 2);
-		ft_putstr_fd(str, 2);
-		ft_putendl_fd(": too many args", 2);
+		ft_putstr_fd(*str, 2);
+		ft_putendl_fd(": too many arguments", 2);
 		return (-1);
 	}
 	print_pairs(env);
 	temp = exported_vars;
-	if (!temp->key)
+	if (!temp)
 		return (0);
 	while(temp)
 	{
@@ -41,5 +45,6 @@ int env(t_pair *env, t_pair *exported_vars, char *str)
             printf("%s%s\n", temp->key, temp->value);
 		temp = temp->next;
 	}
+	data->exit_status = 0;
 	return (0);
 }
