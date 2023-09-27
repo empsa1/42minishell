@@ -118,7 +118,6 @@ int							print_syntax_error(char c);
 int							print_file_error(char *s1, char *s2);
 int							check_unclosed(t_data *data, char *str);
 void						terminal_prompt(void);
-void						sigint_handler(int signal);
 int							print_parse_error(char c);
 char						*treat_str(char *line, char aspas, int i, int j);
 int							mini_heredoc(t_data *data, char *str);

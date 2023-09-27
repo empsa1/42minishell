@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/27 16:20:18 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/27 17:42:30 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,26 +55,20 @@ void	init_cmd_lst(t_command_list *cmd_lst)
 	cmd_lst->stdout = dup(STDOUT_FILENO);
 }
 
-int	main(int ac, char **av, char **envp)
+void	minishell(t_data *data, char *line)
 {
-	t_data data;
-	char **splitter;
-	char *changes;
-	char * line;
-	t_command_list *cmd_lst;
+	char			**splitter;
+	char			*changes;
+	t_command_list	*cmd_lst;
 
-	if (ac != 1 || av[1])
-		return (ft_putstr_fd("Error: Too many arguments\n", 1));
-	init(&data, envp);
-	// signal(SIGQUIT, SIG_IGN);
-	// signal(SIGINT, sigint_handler);
-	while (!data.exit)
+	while (!data->exit)
 	{
-		line = readline("minishell$> ");
+		if (!line)
+			line = readline("minishell$> ");
 		if (line != NULL && *line)
 		{
 			add_history(line);
-			if (!token_error(&data, line) && !check_unclosed(&data, line))
+			if (!token_error(data, line) && !check_unclosed(data, line))
 			{
 				changes = treat_str(line, 0, 0, 0);
 				splitter = ft_split(changes, 2);
@@ -82,13 +76,27 @@ int	main(int ac, char **av, char **envp)
 				cmd_lst->arg = malloc(sizeof(t_arg) * (ft_strleni(splitter, 0)
 						+ 1));
 				parsing(cmd_lst, splitter, 0);
-				check_cmd(&data, cmd_lst, &data.pipes);
+				check_cmd(data, cmd_lst, &data->pipes);
 				free_all(cmd_lst, changes, splitter);
 			}
 		}
 		free(line);
-		// fprintf(stderr, "EXIT STATUS: %d\n", data.exit_status);
+		line = NULL;
 	}
-	free_data(&data);
-	return (0);
+	free_data(data);
+}
+int	main(int ac, char **av, char **envp)
+{
+	char *line;
+	t_data data;
+
+	line = NULL;
+	if (ac == 3 && !ft_strncmp(av[1], "-c", 3))
+		line = ft_strdup(av[2]);
+	else if (ac != 1)
+		return (ft_putstr_fd("Error: Wrong arguments\n", 1));
+	init(&data, envp);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sigint_handler);
+	minishell(&data, line);
 }
