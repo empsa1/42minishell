@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 20:05:10 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/27 07:29:55 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,18 @@ int	check_fds(t_data *data, t_command_list *cmd_lst, t_pipe *pipes, int i)
 	return (0);
 }
 
-void	add_pid(t_data *data, int pid)
+void	add_pid(t_data *data, int pid, t_command_list *cmd_lst)
 {
 	t_pid	*temp;
 
 	temp = malloc(sizeof(t_pid));
-	fprintf(stderr, "adding %d\n", pid);
 	temp->value = pid;
+	if (!cmd_lst->next)
+		temp->last = 1;
+	else
+		temp->last = 0;
 	temp->next = data->pid;
 	data->pid = temp;
-	fprintf(stderr, "data->pid value: %d\n", data->pid->value);
 }
 
 int	execute_execve(t_data *data, t_command_list *cmd_lst, char **args)
@@ -95,7 +97,7 @@ int	execute_execve(t_data *data, t_command_list *cmd_lst, char **args)
 		return (-1);
 	}
 	if (pid != 0)
-		add_pid(data, pid);
+		add_pid(data, pid, cmd_lst);
 	if (pid == 0)
 	{
 		if (execve(cmd_lst->exec_path, args, NULL) == -1)
@@ -163,7 +165,7 @@ int	check_cmd(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
 	while (pid->value != 0)
 	{
 		waitpid(pid->value, &status, 0);
-		if (pid->value == data->pid->value)
+		if (pid->value == data->pid->value && pid->last)
 			data->exit_status = WEXITSTATUS(status);
 		pid = pid->next;
 	}

@@ -17,6 +17,7 @@ SRCS =	parsing/parsing.c\
 		builtins/check_builtins.c\
 		builtins/cd.c\
 		builtins/echo.c\
+		builtins/exit.c\
 		builtins/env.c\
 		builtins/export.c\
 		builtins/pwd.c\

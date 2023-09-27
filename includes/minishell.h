@@ -48,6 +48,7 @@ typedef struct s_pipe
 typedef struct s_pid
 {
 	int						value;
+	int						last;
 	struct s_pid			*next;
 }							t_pid;
 
@@ -56,6 +57,7 @@ typedef struct s_data
 	char					*name;
 	int						heredoc;
 	int						exit_status;
+	int						exit;
 	t_pid					*pid;
 	t_pair					*env;
 	t_pair					*exported_vars;
@@ -88,6 +90,7 @@ int							env(t_data *data, char **str);
 int							export(t_data *data, char **str);
 int							pwd(t_data *data, char **str);
 int							unset(t_data *data, char **str);
+int							exit_builtin(t_data *data, char **str);
 int							is_builtin(t_data *data, char **args);
 
 void						print_struct(t_command_list *lst);

@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 17:33:43 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/26 22:40:32 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	init(t_data *data, char **envp)
 	}
 	data->env = get_env(envp);
 	data->exit_status = 0;
+	data->exit = 0;
 	data->exported_vars = NULL;
 	data->pipes.next = malloc(sizeof(t_pipe));
 	data->pipes.next->next = &data->pipes;
@@ -67,20 +68,20 @@ int	main(int ac, char **av, char **envp)
 	init(&data, envp);
 	// signal(SIGQUIT, SIG_IGN);
 	// signal(SIGINT, sigint_handler);
-	while (1)
+	while (!data.exit)
 	{
-		line = readline("minishell$>");
+		line = readline("minishell$> ");
 		if (line != NULL && *line)
 		{
 			add_history(line);
 			if (!token_error(&data, line) && !check_unclosed(&data, line))
 			{
-				if (!ft_strncmp(line, "exit", 4) && (!line[4]
-						|| line[4] == ' '))
-				{
-					free(line);
-					break ;
-				}
+				// if (!ft_strncmp(line, "exit", 4) && (!line[4]
+				// 		|| line[4] == ' '))
+				// {
+				// 	free(line);
+				// 	break ;
+				// }
 				changes = treat_str(line, 0, 0, 0);
 				splitter = ft_split(changes, 2);
 				cmd_lst = malloc(sizeof(t_command_list));
