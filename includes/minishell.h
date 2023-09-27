@@ -104,7 +104,7 @@ void						parsing(t_command_list *cmd_lst, char **splitter,
 int							create_executor(char *command);
 void						sigint_handler(int signal);
 int							exec(char **str);
-int							expand_path(char *str, char *buf);
+int							expand_path(char *str);
 t_pair						*get_env(char **envp);
 void						cleanup(t_data *data);
 int							get_length_to_char(char *str, char c);

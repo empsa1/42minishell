@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 15:52:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 16:03:39 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/27 12:52:57 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,6 @@ int pwd(t_data *data, char **str)
     
     if (!getcwd(buf, PATH_MAX))
         perror("pwd:");
-    ft_putendl_fd(buf, 2);
+    ft_putendl_fd(buf, 1);
     return(0);
 }

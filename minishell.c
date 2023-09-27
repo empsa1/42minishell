@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 22:40:32 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/27 16:20:18 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,6 @@ int	main(int ac, char **av, char **envp)
 			add_history(line);
 			if (!token_error(&data, line) && !check_unclosed(&data, line))
 			{
-				// if (!ft_strncmp(line, "exit", 4) && (!line[4]
-				// 		|| line[4] == ' '))
-				// {
-				// 	free(line);
-				// 	break ;
-				// }
 				changes = treat_str(line, 0, 0, 0);
 				splitter = ft_split(changes, 2);
 				cmd_lst = malloc(sizeof(t_command_list));
@@ -93,7 +87,7 @@ int	main(int ac, char **av, char **envp)
 			}
 		}
 		free(line);
-		fprintf(stderr, "EXIT STATUS: %d\n", data.exit_status);
+		// fprintf(stderr, "EXIT STATUS: %d\n", data.exit_status);
 	}
 	free_data(&data);
 	return (0);

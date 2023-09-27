@@ -6,42 +6,21 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:53:27 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 16:56:11 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/27 15:15:10 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	change_dir(char *buf, char *str)
+int	change_dir(char *str)
 {
-	if (chdir(buf) == -1)
+	if (chdir(str) == -1)
 	{
-		ft_putstr_fd("cd: ", 2);
-		ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("minishell: cd: ", 2);
+		ft_putstr_fd(str, 2);
 		ft_putstr_fd(": ", 2);
-		ft_putendl_fd(str, 2);
-		return (errno);
-	}
-	return (0);
-}
-
-int	empty_path(t_data *data, char *buf)
-{
-	int		i;
-	t_pair	*temp;
-
-	i = -1;
-	temp = data->env;
-	while (temp->next)
-	{
-		if (!ft_strncmp(temp->key, "HOME=", 5))
-		{
-			while (temp->key[5 + ++i])
-				buf[i] = temp->key[5 + i];
-			while (buf[i])
-				buf[i++] = 0;
-		}
-		temp = temp->next;
+		ft_putendl_fd(strerror(errno), 2);
+		return (1);
 	}
 	return (0);
 }
@@ -52,13 +31,13 @@ void	change_pwd_oldpwd(t_pair *temp, char *buf, char *oldpwd)
 	{
 		if (!ft_strncmp(temp->key, "OLDPWD=", 7))
 		{
-			free(temp->key);
-			temp->key = ft_strjoin("OLDPWD=", oldpwd);
+			free(temp->value);
+			temp->value = oldpwd;
 		}
 		if (!ft_strncmp(temp->key, "PWD=", 4))
 		{
-			free(temp->key);
-			temp->key = ft_strjoin("PWD=", buf);
+			free(temp->value);
+			temp->value = ft_strdup(buf);
 		}
 		temp = temp->next;
 	}
@@ -67,21 +46,27 @@ void	change_pwd_oldpwd(t_pair *temp, char *buf, char *oldpwd)
 int	cd(t_data *data, char **str)
 {
 	char	*oldpwd;
-	char	buf[PATH_MAX];
+	char	*new_path;
+	char	pwd[PATH_MAX];
 
-	getcwd(buf, PATH_MAX);
-    oldpwd = ft_strdup(buf);
-    if (!str[1])
-		empty_path(data, buf);
-	else if (expand_path(str[1], buf))
+	new_path = str[0];
+	(void)data;
+	getcwd(pwd, PATH_MAX);
+	oldpwd = ft_strdup(pwd);
+	if (str[0] && str[1])
 	{
-		ft_putstr_fd("minishell: cd: too many arguments: ", 2);
-		ft_putendl_fd(str[1], 2);
-		return (-1);
+		ft_putendl_fd("minishell: cd: too many arguments", 2);
+		data->exit_status  = 1;
+		free(oldpwd);
+		return (0);
 	}
-    printf("change to %s\n", buf);
-	if (change_dir(buf, str[1]))
-		return (errno);
-	change_pwd_oldpwd(data->env, buf, oldpwd);
+	if (!new_path)
+		new_path = "/";
+	data->exit_status = change_dir(new_path);
+	getcwd(pwd, PATH_MAX);
+	if (!data->exit_status)
+		change_pwd_oldpwd(data->env, pwd, oldpwd);
+	else
+		free(oldpwd);
 	return (0);
 }

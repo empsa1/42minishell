@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/27 07:29:55 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/27 16:07:00 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ int	assign_fds(int in_fd, int out_fd)
 {
 	if (in_fd != -1)
 	{
-		fprintf(stderr, "duping STDIN to %d\n", in_fd);
+		// fprintf(stderr, "duping STDIN to %d\n", in_fd);
 		dup2(in_fd, STDIN_FILENO);
 		close(in_fd);
 	}
 	if (out_fd != -1)
 	{
-		fprintf(stderr, "duping STDOUT to %d\n", out_fd);
+		// fprintf(stderr, "duping STDOUT to %d\n", out_fd);
 		dup2(out_fd, STDOUT_FILENO);
 		close(out_fd);
 	}
@@ -86,6 +86,19 @@ void	add_pid(t_data *data, int pid, t_command_list *cmd_lst)
 	data->pid = temp;
 }
 
+void	free_pid(t_data *data)
+{
+	t_pid	*temp;
+
+	while (data->pid->value != 0)
+	{
+		temp = data->pid;
+		data->pid = data->pid->next;
+		free(temp);
+	}
+	data->pid->value = 0;
+}
+
 int	execute_execve(t_data *data, t_command_list *cmd_lst, char **args)
 {
 	int	pid;
@@ -102,12 +115,6 @@ int	execute_execve(t_data *data, t_command_list *cmd_lst, char **args)
 	{
 		if (execve(cmd_lst->exec_path, args, NULL) == -1)
 		{
-			t_pid *temp;
-			temp = data->pid;
-			data->pid = data->pid->next;
-			free(temp);
-			if (data->pipes.open)
-				close(data->pipes.fd[0]);
 			revert_fds(cmd_lst);
 			ft_putstr_fd(cmd_lst->arg->token, 2);
 			ft_putendl_fd(": command not found", 2);
@@ -115,19 +122,6 @@ int	execute_execve(t_data *data, t_command_list *cmd_lst, char **args)
 		}
 	}
 	return (0);
-}
-
-void	free_pid(t_data *data)
-{
-	t_pid	*temp;
-
-	while (data->pid->value != 0)
-	{
-		temp = data->pid;
-		data->pid = data->pid->next;
-		free(temp);
-	}
-	data->pid->value = 0;
 }
 
 int	check_cmd(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
@@ -138,27 +132,22 @@ int	check_cmd(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
 
 	data->pipes.open = 0;
 	data->pipes.next->open = 0;
-	data->exit_status = 0;
 	while (cmd_lst)
 	{
 		init_cmd_lst(cmd_lst);
 		arg_list = get_arg_list(cmd_lst->arg);
 		if (arg_list)
 			check_path(data->path, cmd_lst, *arg_list);
-		if (check_fds(data, cmd_lst, pipes, 0))
+		if (check_fds(data, cmd_lst, pipes, 0) != 0)
 		{
-			free_cmd(arg_list, cmd_lst, &data->heredoc);
-			revert_fds(cmd_lst);
-			data->exit_status = errno;
+			close(pipes->fd[1]);
+			data->exit_status = 1;
 		}
-		else
-		{
-			if (!is_builtin(data, arg_list))
-				execute_execve(data, cmd_lst, arg_list);
-			pipes = pipes->next;
-			free_cmd(arg_list, cmd_lst, &data->heredoc);
-			revert_fds(cmd_lst);
-		}
+		else if (!is_builtin(data, arg_list))
+			execute_execve(data, cmd_lst, arg_list);
+		free_cmd(arg_list, cmd_lst, &data->heredoc);
+		revert_fds(cmd_lst);
+		pipes = pipes->next;
 		cmd_lst = cmd_lst->next;
 	}
 	pid = data->pid;

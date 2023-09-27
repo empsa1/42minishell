@@ -13,7 +13,6 @@ SRCS =	parsing/parsing.c\
 		utils/utils3.c\
 		utils/get_env.c\
 		utils/cleardata.c\
-		utils/expand_path.c\
 		builtins/check_builtins.c\
 		builtins/cd.c\
 		builtins/echo.c\
