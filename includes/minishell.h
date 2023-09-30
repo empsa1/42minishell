@@ -140,5 +140,7 @@ int							check_fds(t_data *data, t_command_list *cmd_lst,
 								t_pipe *pipes, int i);
 size_t						len_to_char(char *str, char c);
 void						free_path(char **path);
+void						sigintchild_handler(int singal);
+void						expand(t_arg *arg);
 
 #endif
