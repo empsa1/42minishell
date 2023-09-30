@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/30 15:09:46 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/30 16:04:19 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ int	execute_execve(t_data *data, t_command_list *cmd_lst, char **args)
 		add_pid(data, pid, cmd_lst);
 	if (pid == 0)
 	{
+		signal(SIGINT, sigint_handler);
 		// fprintf(stderr, "closed after process %d\n", STDOUT_FILENO);
 		if (execve(cmd_lst->exec_path, args, NULL) == -1)
 		{
