@@ -14,6 +14,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
+extern int					g_signal;
+
 enum						tokens
 {
 	STR,     // str
@@ -107,9 +109,7 @@ int							exec(char **str);
 int							expand_path(char *str);
 t_pair						*get_env(char **envp);
 void						cleanup(t_data *data);
-int							get_length_to_char(char *str, char c);
 void						free_nodes(t_node *node);
-void						print_nodes(t_node *node);
 void						print_pairs(t_pair *pair);
 void						print_exported(t_node *node);
 void						free_pairs(t_pair *pair);
@@ -123,14 +123,13 @@ char						*treat_str(char *line, char aspas, int i, int j);
 int							mini_heredoc(t_data *data, char *str);
 int							check_cmd(t_data *data, t_command_list *cmd_lst,
 								t_pipe *pipes);
-t_pair						*get_env(char **envp);
 char						*get_next_line(int fd);
 int							token_error(t_data *data, char *str);
 char						**get_arg_list(t_arg *arg);
 int							open_file(int *fd, char *filename, int flags,
 								int perms);
 void						revert_fds(t_command_list *cmd_lst);
-int							check_path(char **path, t_command_list *cmd_lst,
+int							check_path(t_data *data, t_command_list *cmd_lst,
 								char *str);
 void						free_data(t_data *data);
 void						free_args(t_arg *arg);
@@ -139,5 +138,7 @@ void						free_cmd(char **arg_list, t_command_list *cmd_lst,
 void						init_cmd_lst(t_command_list *cmd_lst);
 int							check_fds(t_data *data, t_command_list *cmd_lst,
 								t_pipe *pipes, int i);
+size_t						len_to_char(char *str, char c);
+void						free_path(char **path);
 
 #endif

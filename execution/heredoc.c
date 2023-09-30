@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 15:38:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/25 21:19:00 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/27 19:48:24 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	mini_heredoc(t_data *data, char *eof)
 	if (fd == -1)
 		return (1);
 	data->heredoc = 1;
-	printf("heredoc fd: %d\n", fd);
 	while (ft_strncmp(heredoc, eofile, ft_strlen(eofile) + 1))
 	{
 		heredoc = readline(">");

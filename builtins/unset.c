@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 17:43:40 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 17:11:41 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/28 11:51:11 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,14 @@ int	remove_from_list(char *str, t_pair *pair)
 {
 	t_pair	*prev;
 	t_pair	*cur;
+	int strlen;
 
 	cur = pair;
 	prev = NULL;
+	strlen = ft_strlen(str);
 	while (cur)
 	{
-		if (ft_strlen(str) == len_to_char(cur->key, '=') && !ft_strncmp(str,
-				cur->key, ft_strlen(str)))
+		if (!ft_strncmp(str, cur->key, strlen))
 		{
 			printf("removing %s\n", str);
 			if (!prev)
@@ -61,7 +62,7 @@ int	remove_from_list(char *str, t_pair *pair)
 
 int	unset(t_data *data, char **str)
 {
-	int		i;
+	int	i;
 
 	i = -1;
 	if (!str)
@@ -74,6 +75,7 @@ int	unset(t_data *data, char **str)
 			ft_putstr_fd(str[i], 2);
 			ft_putendl_fd(": invalid parameter name", 2);
 		}
+		printf("RRRremoving %s\n", *str);
 		if (!remove_from_list(str[i], data->exported_vars))
 			if (data->exported_vars->key)
 				remove_from_list(str[i], data->exported_vars);

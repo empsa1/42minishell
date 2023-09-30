@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 10:04:18 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/26 10:10:54 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/29 06:06:03 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,18 +67,39 @@ int	open_file(int *fd, char *filename, int flags, int perms)
 
 void	revert_fds(t_command_list *cmd_lst)
 {
+	fprintf(stderr, "closed %d\n", cmd_lst->stdin);
 	dup2(cmd_lst->stdin, STDIN_FILENO);
 	close(cmd_lst->stdin);
+	fprintf(stderr, "closed %d\n", cmd_lst->stdout);
 	dup2(cmd_lst->stdout, STDOUT_FILENO);
 	close(cmd_lst->stdout);
 }
 
-int	check_path(char **path, t_command_list *cmd_lst, char *str)
+char **get_path(t_data *data)
+{
+	while (data->env)
+	{
+		if (!ft_strncmp(data->env->key, "PATH=", 5))
+			return (ft_split(data->env->value, ':'));
+		data->env = data->env->next;
+	}
+	return (NULL);
+}
+
+int	check_path(t_data *data, t_command_list *cmd_lst, char *str)
 {
 	int i;
 	char *temp;
 	char *path_to_test;
 
+	(void) data;
+	data->path = get_path(data);
+	char **path = data->path;
+	if (!*path)
+	{
+		fprintf(stderr, "PATH not found\n");
+		return(0);
+	}
 	path_to_test = NULL;
 	i = 0;
 	if (*str == '/')

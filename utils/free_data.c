@@ -6,13 +6,13 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 06:47:38 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/27 12:51:08 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/29 06:40:23 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	free_env(t_pair *pair)
+void	free_pair(t_pair *pair)
 {
 	t_pair	*temp;
 
@@ -31,6 +31,8 @@ void	free_path(char **path)
 	int	i;
 
 	i = 0;
+	if (!path)
+		return;
 	while (path[i] != NULL)
 		free(path[i++]);
 	free(path);
@@ -38,8 +40,8 @@ void	free_path(char **path)
 
 void	free_data(t_data *data)
 {
+	free_pair(data->env);
 	free(data->pid);
 	free(data->pipes.next);
-	free_env(data->env);
-	free_path(data->path);
+	free_pair(data->exported_vars);
 }

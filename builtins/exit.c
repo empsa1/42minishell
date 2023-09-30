@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 21:07:29 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/27 15:15:10 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/29 06:08:07 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,29 @@
 
 int	exit_builtin(t_data *data, char **str)
 {
-	int ret;
+	unsigned char ret;
+	int i;
 
 	if (!data->pipes.open)
 	{
-		ft_putendl_fd("exit", 1);
+		ft_putendl_fd("exit", 2);
 		data->exit = 1;
 	}
 	else
 		data->exit = 0;
-	if (!str[0])
+	if (!str || !str[0])
 		return (data->exit_status);
+	i = -1;
+	while (str[0][++i])
+		if (!ft_isdigit(str[0][i]))
+		{
+			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd(str[0], 2);
+			ft_putendl_fd(": numeric argument required", 2);
+			data->exit_status = 2;
+			return (data->exit_status);
+		}
 	ret = ft_atoi(str[0]);
-	data->exit_status = ret % 256;
+	data->exit_status = ret;
 	return (data->exit_status);
 }

@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:25:47 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/18 19:06:49 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/28 20:17:44 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_pair *get_env(char **envp)
     temp_node = node;
     while (envp[i])
     {
-        temp_node->key = ft_substr(envp[i], 0, get_length_to_char(envp[i], '=') + 1);
+        temp_node->key = ft_substr(envp[i], 0, len_to_char(envp[i], '=') + 1);
         temp_node->value = ft_strdup(ft_strchr(envp[i], '=') + 1);
         if (envp[i + 1])
         {
@@ -39,23 +39,3 @@ t_pair *get_env(char **envp)
     }
     return(node);
 }
-
-// int main(int ac, char **av, char **envp)
-// {
-//     t_data *data;
-    
-//     if (!ac || !av)
-//         return(1);
-//     data = malloc(sizeof(t_data));
-//     data->env = get_env(envp);
-//     t_pair *temp;
-//     while (data->env)
-//     {
-//         temp = data->env;
-//         free(data->env->key);
-//         free(data->env->value);
-//         data->env = data->env->next;
-//         free(temp);
-//     }
-//     free(data);
-// }

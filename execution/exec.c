@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/27 16:07:00 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/30 15:02:19 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	do_pipes(t_command_list *cmd_lst, t_pipe *pipes)
 	if (cmd_lst->next)
 	{
 		pipe(pipes->fd);
+		fprintf(stderr, "opened pipe: %d %d\n", pipes->fd[0], pipes->fd[1]);
 		pipes->open = 1;
 		if (cmd_lst->out_fd == -1)
 			cmd_lst->out_fd = pipes->fd[1];
@@ -30,13 +31,13 @@ int	assign_fds(int in_fd, int out_fd)
 {
 	if (in_fd != -1)
 	{
-		// fprintf(stderr, "duping STDIN to %d\n", in_fd);
+		fprintf(stderr, "STDIN is %d\n", in_fd);
 		dup2(in_fd, STDIN_FILENO);
 		close(in_fd);
 	}
 	if (out_fd != -1)
 	{
-		// fprintf(stderr, "duping STDOUT to %d\n", out_fd);
+		fprintf(stderr, "STDOUT is %d\n", out_fd);
 		dup2(out_fd, STDOUT_FILENO);
 		close(out_fd);
 	}
@@ -50,26 +51,26 @@ int	check_fds(t_data *data, t_command_list *cmd_lst, t_pipe *pipes, int i)
 	while (cmd_lst->arg[i].token != NULL)
 	{
 		if (cmd_lst->arg[i].type == IN)
-			if (open_file(&cmd_lst->in_fd, cmd_lst->arg[i].token, O_RDONLY, 0))
+			if (open_file(&cmd_lst->in_fd, cmd_lst->arg[i].token,
+					O_RDONLY | O_CLOEXEC, 0))
 				return (print_file_error("minishell: ", cmd_lst->arg[i].token));
 		if (cmd_lst->arg[i].type == OUT)
 			if (open_file(&cmd_lst->out_fd, cmd_lst->arg[i].token,
-					O_CREAT | O_WRONLY | O_TRUNC, 0664))
+					O_CREAT | O_WRONLY | O_TRUNC | O_CLOEXEC, 0664))
 				return (print_file_error("minishell: ", cmd_lst->arg[i].token));
 		if (cmd_lst->arg[i].type == APPEND)
 			if (open_file(&cmd_lst->out_fd, cmd_lst->arg[i].token,
-					O_CREAT | O_WRONLY | O_APPEND, 0664))
+					O_CREAT | O_WRONLY | O_APPEND | O_CLOEXEC, 0664))
 				return (print_file_error("minishell: ", cmd_lst->arg[i].token));
 		if (cmd_lst->arg[i].type == HEREDOC)
 		{
 			if (mini_heredoc(data, cmd_lst->arg[i].token))
 				return (print_file_error("minishell: ", "heredoc"));
-			cmd_lst->in_fd = open("heredoc_163465", O_RDONLY);
+			cmd_lst->in_fd = open("heredoc_163465", O_RDONLY | O_CLOEXEC);
 		}
 		i++;
 	}
-	assign_fds(cmd_lst->in_fd, cmd_lst->out_fd);
-	return (0);
+	return (assign_fds(cmd_lst->in_fd, cmd_lst->out_fd));
 }
 
 void	add_pid(t_data *data, int pid, t_command_list *cmd_lst)
@@ -113,6 +114,7 @@ int	execute_execve(t_data *data, t_command_list *cmd_lst, char **args)
 		add_pid(data, pid, cmd_lst);
 	if (pid == 0)
 	{
+		fprintf(stderr, "closed after process %d\n", STDOUT_FILENO);
 		if (execve(cmd_lst->exec_path, args, NULL) == -1)
 		{
 			revert_fds(cmd_lst);
@@ -124,11 +126,25 @@ int	execute_execve(t_data *data, t_command_list *cmd_lst, char **args)
 	return (0);
 }
 
+void	wait_for_execve(t_data *data, int *status)
+{
+	t_pid	*pid;
+
+	pid = data->pid;
+	while (pid->value != 0)
+	{
+		waitpid(pid->value, status, 0);
+		if (pid->value == data->pid->value && pid->last)
+			data->exit_status = WEXITSTATUS(*status);
+		pid = pid->next;
+	}
+	free_pid(data);
+}
+
 int	check_cmd(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
 {
 	char	**arg_list;
 	int		status;
-	t_pid	*pid;
 
 	data->pipes.open = 0;
 	data->pipes.next->open = 0;
@@ -137,27 +153,21 @@ int	check_cmd(t_data *data, t_command_list *cmd_lst, t_pipe *pipes)
 		init_cmd_lst(cmd_lst);
 		arg_list = get_arg_list(cmd_lst->arg);
 		if (arg_list)
-			check_path(data->path, cmd_lst, *arg_list);
+			check_path(data, cmd_lst, *arg_list);
 		if (check_fds(data, cmd_lst, pipes, 0) != 0)
 		{
 			close(pipes->fd[1]);
 			data->exit_status = 1;
 		}
-		else if (!is_builtin(data, arg_list))
+		else if (arg_list && !is_builtin(data, arg_list))
 			execute_execve(data, cmd_lst, arg_list);
+		free_path(data->path);
 		free_cmd(arg_list, cmd_lst, &data->heredoc);
 		revert_fds(cmd_lst);
 		pipes = pipes->next;
 		cmd_lst = cmd_lst->next;
 	}
-	pid = data->pid;
-	while (pid->value != 0)
-	{
-		waitpid(pid->value, &status, 0);
-		if (pid->value == data->pid->value && pid->last)
-			data->exit_status = WEXITSTATUS(status);
-		pid = pid->next;
-	}
-	free_pid(data);
+	data->pipes.open = 0;
+	wait_for_execve(data, &status);
 	return (data->exit_status);
 }

@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/27 17:42:30 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/29 06:42:12 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,22 @@
 //     return (0);
 // }
 
+int		g_signal;
+
 void	init(t_data *data, char **envp)
 {
-	int	i;
-
-	i = -1;
-	while (envp[++i])
-	{
-		if (ft_strnstr(envp[i], "PATH=", 5))
-			data->path = ft_split(&envp[i][5], ':');
-	}
 	data->env = get_env(envp);
 	data->exit_status = 0;
 	data->exit = 0;
-	data->exported_vars = NULL;
+	data->exported_vars = malloc(sizeof(t_pair));
+	data->exported_vars->key = NULL;
+	data->exported_vars->value = NULL;
+	data->exported_vars->next = NULL;
+	data->pipes.open = 0;
 	data->pipes.next = malloc(sizeof(t_pipe));
 	data->pipes.next->next = &data->pipes;
 	data->heredoc = 0;
+	data->path = NULL;
 	data->pid = malloc(sizeof(t_pid));
 	data->pid->value = 0;
 	data->pid->next = NULL;
@@ -65,7 +64,9 @@ void	minishell(t_data *data, char *line)
 	{
 		if (!line)
 			line = readline("minishell$> ");
-		if (line != NULL && *line)
+		if (!line)
+			exit_builtin(data, NULL);
+		else if (line)
 		{
 			add_history(line);
 			if (!token_error(data, line) && !check_unclosed(data, line))
@@ -83,7 +84,6 @@ void	minishell(t_data *data, char *line)
 		free(line);
 		line = NULL;
 	}
-	free_data(data);
 }
 int	main(int ac, char **av, char **envp)
 {
@@ -91,6 +91,7 @@ int	main(int ac, char **av, char **envp)
 	t_data data;
 
 	line = NULL;
+	g_signal = 0;
 	if (ac == 3 && !ft_strncmp(av[1], "-c", 3))
 		line = ft_strdup(av[2]);
 	else if (ac != 1)
@@ -99,4 +100,5 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sigint_handler);
 	minishell(&data, line);
+	free_data(&data);
 }
