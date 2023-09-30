@@ -96,7 +96,7 @@ int							exit_builtin(t_data *data, char **str);
 int							is_builtin(t_data *data, char **args);
 
 void						print_struct(t_command_list *lst);
-int							token(char *line, int i);
+int							token(char *line);
 int							ft_strleni(char **splitter, int i);
 int							z_cmp(char *str, char *cmp);
 void						free_all(t_command_list *cmd_lst, char *changes,
@@ -119,7 +119,7 @@ int							print_file_error(char *s1, char *s2);
 int							check_unclosed(t_data *data, char *str);
 void						terminal_prompt(void);
 int							print_parse_error(char c);
-char						*treat_str(char *line, char aspas, int i, int j);
+char						*treat_str(char *line, char aspas, int j);
 int							mini_heredoc(t_data *data, char *str);
 int							check_cmd(t_data *data, t_command_list *cmd_lst,
 								t_pipe *pipes);

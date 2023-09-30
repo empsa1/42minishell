@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 20:32:07 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/28 10:06:28 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/30 15:26:23 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 int env(t_data *data, char **str)
 {
 	t_pair *temp;
+
+	temp = data->env;
 	if (*str)
 	{
 		ft_putstr_fd("env: ", 2);
@@ -26,7 +28,7 @@ int env(t_data *data, char **str)
 		ft_putendl_fd(": too many arguments", 2);
 		return (-1);
 	}
-	print_pairs(data->env);
+	print_pairs(temp);
 	temp = data->exported_vars;
 	if (!temp)
 		return (0);

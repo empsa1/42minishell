@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/29 06:42:12 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/30 16:01:23 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	minishell(t_data *data, char *line)
 			add_history(line);
 			if (!token_error(data, line) && !check_unclosed(data, line))
 			{
-				changes = treat_str(line, 0, 0, 0);
+				changes = treat_str(line, 0, 0);
 				splitter = ft_split(changes, 2);
 				cmd_lst = malloc(sizeof(t_command_list));
 				cmd_lst->arg = malloc(sizeof(t_arg) * (ft_strleni(splitter, 0)

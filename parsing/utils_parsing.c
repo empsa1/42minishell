@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_parsing.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eportela <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/30 15:57:32 by eportela          #+#    #+#             */
+/*   Updated: 2023/09/30 15:57:32 by eportela         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void    iterator(char *line)
@@ -11,25 +23,27 @@ void    iterator(char *line)
     printf("\n");
 }
 
-int token(char *line, int i)
+int token(char *line)
 {
-    if (line[i] == '|')
+    if (!line || *line == '\0')
+        return (STR);
+    if (line[0] == '|')
         return PIPE;
-    if (line[i] == '>')
+    if (line[0] == '>')
     {
-        if (line[i + 1] && line[i + 1]  == '>')
+        if (line[1] && line[1]  == '>')
             return (APPEND);
         else
             return (OUT);
     }
-    if (line[i] == '<')
+    if (line[0] == '<')
     {
-        if (line[i + 1] && line[i + 1] == '<')
+        if (line[1] && line[1] == '<')
             return (HEREDOC);
         else
             return (IN);
     }
-    if (line[i] == ';')
+    if (line[0] == ';')
         return (END);
     else
         return (STR);

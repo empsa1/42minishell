@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 11:57:59 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/28 16:13:12 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/30 15:45:40 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	check_end_of_command(t_data *data, char *str)
 			break ;
 		if (ft_strchr("<>|", str[i]))
 		{
+			printf("Here1\n");
 			data->exit_status = 2;
 			return (print_syntax_error(str[i + 1]));
 		}
@@ -52,7 +53,7 @@ int	check_unexpected_token(t_data *data, char *str)
 		return (0);
 	while (str[i] && str[i] == ' ')
 		i++;
-	if (str[i] && ft_strchr("<>", str[i]))
+	if (str[i] && ft_strchr("<>|", str[i]))
 	{
 		data->exit_status = 2;
 		return (print_syntax_error(str[i]));
@@ -63,6 +64,7 @@ int	check_unexpected_token(t_data *data, char *str)
 int	token_error(t_data *data, char *str)
 {
 	int	i;
+	int j;
 
 	i = 0;
 	while (str[i] == ' ')
@@ -74,15 +76,13 @@ int	token_error(t_data *data, char *str)
 	}
 	while (str[i] != 0)
 	{
+		j = 0;
 		if (!ft_strncmp(&str[i], "<<", 2) || !ft_strncmp(&str[i], ">>", 2))
-			i += 2;
-		else if (ft_strchr("<>", str[i]))
-			i += 1;
-		if (check_unexpected_token(data, &str[i]))
-		{
-			data->exit_status = 2;
+			j += 2;
+		else if (ft_strchr("<>|", str[i]))
+			j += 1;
+		if (j && check_unexpected_token(data, &str[i + j]))
 			return (1);
-		}
 		i++;
 	}
 	return (check_end_of_command(data, str));

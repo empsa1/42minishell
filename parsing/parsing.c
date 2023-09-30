@@ -14,41 +14,43 @@
 
 //echo "A B | < > >> << ;   FDASF" | A | B | C | D <<<DEW
 
-char    *treat_str(char *line, char aspas, int i, int j)
+int    treat_str_handler(char *newline, char **line, char aspas, int *j)
+{
+    if (!aspas && token(line[0]) != 0)
+    { 
+        newline[(*j)++] = 2;
+        newline[(*j)++] = *line[0]++;
+        if (token(line[0]) != 0)
+            newline[(*j)++] = *line[0]++;
+        newline[(*j)++] = 2;
+        return (1);
+    }
+    return (0);
+}
+
+char    *treat_str(char *line, char aspas, int j)
 {
     char *newline;
 
-    newline = malloc(ft_strlen(line) * 2);
-    while (line[i] != '\0')
+    newline = malloc(ft_strlen(line) * 5);
+    while (*line != '\0')
     {
-        if (!aspas && line[i] && (line[i] == '"' || line[i] == '\''))
+        if (!aspas && (*line == '"' || *line == '\''))
         {
-            aspas = line[i++];
-            while (line[i] != aspas)
-            {
-                if (line[i] == '\0')
-                    return ("{ERROR}");
-                newline[j++] = line[i++];
-            }
+            aspas = *line++;
+            newline[j++] = aspas;
+        }
+        else if (treat_str_handler(newline, &line, aspas, &j))
+            continue;
+        else if(!aspas && *line == ' ' && *line++)
+            newline[j++] = 2;
+        else if (aspas && aspas == *line)
+        {
+            newline[j++] = *line++;
             aspas = 0;
-            i++;
-        }
-        else if (aspas == 0 && token(line, i) != 0)
-        {
-            newline[j++] = 2;
-            newline[j++] = line[i];
-            if (token(line, i + 1) != 0)
-                newline[j++] = line[++i];
-            newline[j++] = 2;
-            i++;
-        }
-        else if(aspas == 0 && line[i] == ' ')
-        {
-            newline[j++] = 2;
-            i++;
         }
         else
-            newline[j++] = line[i++];
+            newline[j++] = *line++;
     }
     newline[j++] = '\0';
     return (newline);
@@ -78,18 +80,21 @@ void parsing(t_command_list *cmd_lst, char **splitter, int i)
     int j;
     
     j = 0;
+    // if (!is_valid_command(splitter[i++]))
+    //     exit(-1);
     while (splitter[i] && !z_cmp(splitter[i], "|") && !z_cmp(splitter[i], ";"))
     {
-        if (token(splitter[i], 0) != 0 && splitter[i + 1])
+        if (token(splitter[i]) != 0 && splitter[i + 1])
         {
             cmd_lst->arg[j].token = splitter[i + 1];
-            cmd_lst->arg[j].type = token(splitter[i], 0);
+            cmd_lst->arg[j].type = token(splitter[i]);
+            printf("%d %s\n",cmd_lst->arg[j].type, cmd_lst->arg[j].token);
             i++;
         }
         else
         {
             cmd_lst->arg[j].token = splitter[i];
-            cmd_lst->arg[j].type = token(splitter[i], 0);
+            cmd_lst->arg[j].type = token(splitter[i]);
         }
         j++;
         i++;

@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 16:05:45 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/30 15:02:19 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/30 15:09:46 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	do_pipes(t_command_list *cmd_lst, t_pipe *pipes)
 	if (cmd_lst->next)
 	{
 		pipe(pipes->fd);
-		fprintf(stderr, "opened pipe: %d %d\n", pipes->fd[0], pipes->fd[1]);
+		// fprintf(stderr, "opened pipe: %d %d\n", pipes->fd[], pipes->fd[1]);
 		pipes->open = 1;
 		if (cmd_lst->out_fd == -1)
 			cmd_lst->out_fd = pipes->fd[1];
@@ -31,13 +31,13 @@ int	assign_fds(int in_fd, int out_fd)
 {
 	if (in_fd != -1)
 	{
-		fprintf(stderr, "STDIN is %d\n", in_fd);
+		// fprintf(stderr, "STDIN is %d\n", in_fd);
 		dup2(in_fd, STDIN_FILENO);
 		close(in_fd);
 	}
 	if (out_fd != -1)
 	{
-		fprintf(stderr, "STDOUT is %d\n", out_fd);
+		// fprintf(stderr, "STDOUT is %d\n", out_fd);
 		dup2(out_fd, STDOUT_FILENO);
 		close(out_fd);
 	}
@@ -114,7 +114,7 @@ int	execute_execve(t_data *data, t_command_list *cmd_lst, char **args)
 		add_pid(data, pid, cmd_lst);
 	if (pid == 0)
 	{
-		fprintf(stderr, "closed after process %d\n", STDOUT_FILENO);
+		// fprintf(stderr, "closed after process %d\n", STDOUT_FILENO);
 		if (execve(cmd_lst->exec_path, args, NULL) == -1)
 		{
 			revert_fds(cmd_lst);
