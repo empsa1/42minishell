@@ -6,22 +6,11 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 16:47:26 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/30 16:11:05 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/30 16:52:08 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// int create_executor(char *command)
-// {
-//     if (fork() == 0)
-//     {
-//         signal(SIGINT, sigint_handler);
-//         exec(&command);
-//         kill(getpid(), SIGSEGV);
-//     }
-//     return (0);
-// }
 
 int		g_signal;
 

@@ -24,6 +24,7 @@ SRCS =	parsing/parsing.c\
 		execution/exec.c\
 		execution/heredoc.c\
 		execution/utils_exec.c\
+		execution/expand.c\
 		utils/free_data.c\
 		#parsing/check_unclosed.c\
 		#parsing/token_error.c
@@ -63,4 +64,6 @@ fclean:
 
 re: fclean all
 
-.PHONY: all clean fclean re
+r: re && clear && ./minisheel
+
+.PHONY: all clean fclean re r

@@ -6,7 +6,7 @@
 /*   By: anda-cun <anda-cun@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 10:04:18 by anda-cun          #+#    #+#             */
-/*   Updated: 2023/09/30 15:10:22 by anda-cun         ###   ########.fr       */
+/*   Updated: 2023/09/30 16:25:22 by anda-cun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,8 @@ int	open_file(int *fd, char *filename, int flags, int perms)
 
 void	revert_fds(t_command_list *cmd_lst)
 {
-	// fprintf(stderr, "closed %d\n", cmd_lst->stdin);
 	dup2(cmd_lst->stdin, STDIN_FILENO);
 	close(cmd_lst->stdin);
-	// fprintf(stderr, "closed %d\n", cmd_lst->stdout);
 	dup2(cmd_lst->stdout, STDOUT_FILENO);
 	close(cmd_lst->stdout);
 }
